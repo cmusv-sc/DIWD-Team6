@@ -1,0 +1,14 @@
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/repositories/DatasetRepository.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/services/AuthorService.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/domain/Paper.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/repositories/AuthorRepository.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/services/PaperService.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/utils/Remap.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/repositories/PaperRepository.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/services/DatasetService.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/domain/Author.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/domain/Publication.java
+/Users/Venno/github/KG-DBLP/src/main/java/startingPoint/KG_DBLP/KnowledgeGraph.java
+/Users/Venno/github/KG-DBLP/src/main/java/startingPoint/KG_DBLP/App.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/domain/Dataset.java
+/Users/Venno/github/KG-DBLP/src/main/java/neo4j/domain/User.java
