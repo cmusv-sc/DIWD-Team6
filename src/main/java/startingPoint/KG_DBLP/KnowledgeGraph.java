@@ -85,5 +85,10 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	//return movieRepository.findByTitleContaining(title);
     	return paperRepository.findByTitle(title);
     }
-
+    
+    @RequestMapping("/test")
+    public String getTest(@RequestParam(value="content") String str) {
+    	System.out.println("hello world! "+str);
+    	return "Hello Test "+str;
+    }
 }
