@@ -22,6 +22,11 @@ public class AuthorService {
         Iterator<Author> result = authorRepository.getAllAuthor().iterator();
         return toAlcFormat(result);
     }
+	
+	public Map<String, Object> getCoAuthor(String name) {
+		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
+        return toAlcFormat(result);
+	}
     private Map<String, Object> toAlcFormat(Iterator<Author> result) {
         List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
         while(result.hasNext()) {
