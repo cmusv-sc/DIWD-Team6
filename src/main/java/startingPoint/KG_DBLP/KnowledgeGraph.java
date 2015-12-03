@@ -46,7 +46,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     
     @RequestMapping("/graphTest")
     public String graphTest(@RequestParam(value = "limit",required = false) Integer limit) {
-    	Map<String, Object> map = paperService.graphAlc(limit == null ? 200 : limit);
+    	Map<String, Object> map = paperService.graphAlc(limit == null ? 10 : limit);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -57,6 +57,20 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	}
     	System.out.println("================================================");
     	System.out.println(json);
+    	return json;
+    }
+    
+    @RequestMapping("/graphByKeyword")
+    public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {
+    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     	return json;
     }
     
@@ -77,6 +91,20 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     @RequestMapping("/getCoAuthor")
     public String getCoAuthor(@RequestParam(value = "name", required = false) String name) {
     	Map<String, Object> map = authorService.getCoAuthor(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/getCoCoAuthor")
+    public String getCoCoAuthor(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = authorService.getCoCoAuthor(name);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
