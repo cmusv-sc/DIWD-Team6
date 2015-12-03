@@ -25,6 +25,7 @@ public class AuthorService {
 	
 	public Map<String, Object> getCoAuthor(String name) {
 		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
+		System.out.print(result.hasNext());
         return toAlcFormat(result);
 	}
     private Map<String, Object> toAlcFormat(Iterator<Author> result) {
