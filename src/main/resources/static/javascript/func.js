@@ -3,18 +3,18 @@ $(document).ready(function() {
   var edges = null;
   var network = null;
 
-  $('#btn1').click(function() {
-    alert($('#para1').val());
+  $('#getCoauthorBtn').click(function() {
+    alert($('#authorName1').val());
     $.ajax({
-      url : "/test",
+      url : "/getCoAuthor",
       type : "POST",
       data : {
-        content : $('#para1').val()
+        name : $('#authorName1').val()
       },
-      dataType: "text"
+      dataType: "json"
     }).done(function(data) {
       alert(data);
-      $('#para1').val(data);
+      $('.testText').val(data)
     })
   }); 
 
