@@ -104,10 +104,26 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
+    
+    
     @RequestMapping("/findExpert")
     public String findExpert(@RequestParam(value = "limit", required = false) Integer limit,
     		@RequestParam(value = "keyword", required = false) String keyword) {
     	Map<String, Object> map = authorService.getExpertByKeyword(limit, keyword);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/findCollaborators")
+    public String findExpert(@RequestParam(value = "keyword", required = false) String keyword) {
+    	Map<String, Object> map = authorService.getCollaboratorsByKeyword(keyword);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -130,8 +146,6 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
-    	System.out.println("=====================================");
-    	System.out.println(json);
     	return json;
     }
     

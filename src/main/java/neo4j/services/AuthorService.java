@@ -32,7 +32,13 @@ public class AuthorService {
 	}
 	
 	public Map<String, Object> getExpertByKeyword(int limit, String keyword) {
-		Iterator<Author> result = authorRepository.graphByKeyword(5, "test").iterator();
+		Iterator<Author> result = authorRepository.graphExpertsByKeyword(limit, keyword).iterator();
+        return toAlcFormatSingle(result);
+
+	}
+	
+	public Map<String, Object> getCollaboratorsByKeyword(String keyword) {
+		Iterator<Author> result = authorRepository.graphCollaboratorsByKeyword(keyword).iterator();
         return toAlcFormatSingle(result);
 
 	} 

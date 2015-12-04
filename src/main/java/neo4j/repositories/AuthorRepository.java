@@ -21,5 +21,8 @@ public interface AuthorRepository extends GraphRepository<Author> {
     Collection<Author> findCoAuthorByName(@Param("name") String name);
 	
 	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN a LIMIT {limit}")
-	Collection<Author> graphByKeyword(@Param("limit") int limit, @Param("keyword") String keyword);
+	Collection<Author> graphExpertsByKeyword(@Param("limit") int limit, @Param("keyword") String keyword);
+	
+	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN a")
+	Collection<Author> graphCollaboratorsByKeyword(@Param("keyword") String keyword);
 }
