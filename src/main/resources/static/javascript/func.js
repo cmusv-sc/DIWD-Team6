@@ -28,7 +28,7 @@ $(document).ready(function() {
       data : {
         keyword : keyword
       },
-      dataType: "text"
+      dataType: "json"
     }).done(function(data) {
       var textVal = "Potential collaborators in "+keyword;
       $('#textArea').val(data);
@@ -45,7 +45,7 @@ $(document).ready(function() {
       data : {
         keyword : keyword
       },
-      dataType: "text"
+      dataType: "json"
     }).done(function(data) {
       var textVal = "Top 10 related papers in "+keyword;
       $('#textArea').val(data);
@@ -63,7 +63,7 @@ $(document).ready(function() {
       data : {
         keyword : keyword
       },
-      dataType: "text"
+      dataType: "json"
     }).done(function(data) {
       var textVal = "Experts in "+keyword;
       $('#textArea').val(data);
@@ -80,7 +80,7 @@ $(document).ready(function() {
       data : {
         name : authorName
       },
-      dataType: "text"
+      dataType: "json"
     }).done(function(data) {
       var textVal = ""+authorName+"'s multi-depth coauther(s)";
       $('#textArea').val(data);
@@ -97,7 +97,7 @@ $(document).ready(function() {
       data : {
         name : authorName
       },
-      dataType: "text"
+      dataType: "json"
     }).done(function(data) {
       //alert(data);
       var textVal = ""+authorName+"'s coauther(s)";
@@ -134,7 +134,7 @@ $(document).ready(function() {
 
   function draw(data) {
     //var test = null;
-    var data = JSON.parse(data);
+    //var data = JSON.parse(data);
     //var container = $('#networkGraph');
     var container = document.getElementById('networkGraph');
     var options = {
