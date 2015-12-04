@@ -44,8 +44,8 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return paperService.graph(limit == null ? 100 : limit);
     }
     
-    @RequestMapping("/graphTest")
-    public String graphTest(@RequestParam(value = "limit",required = false) Integer limit) {
+    @RequestMapping("/graphPaper2Person")
+    public String graphPaper2Person(@RequestParam(value = "limit",required = false) Integer limit) {
     	Map<String, Object> map = paperService.graphAlc(limit == null ? 10 : limit);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
