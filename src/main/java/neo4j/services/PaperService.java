@@ -86,7 +86,7 @@ public class PaperService {
     }
     
     public Map<String, Object> graphAlcByKeyword(int limit, String name) {
-        Iterator<Map<String, Object>> result = paperRepository.graphByKeyword(limit, name).iterator();
+        Iterator<Map<String, Object>> result = paperRepository.graphTopKByKeyword(limit, name).iterator();
         return toAlcFormat(result);
     }
 

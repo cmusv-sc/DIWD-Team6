@@ -14,12 +14,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthorRepository extends GraphRepository<Author> {
-	@Query("match (a:Author) RETURN a")
-    Collection<Author> getAllAuthor();
+	@Query("match (a:Author) RETURN a LIMIT {limit}")
+    Collection<Author> getAllAuthor(@Param("limit") int limit);
 	
 	@Query("MATCH (a:Author)-[B:PUBLISH]->(p:Paper)<-[:PUBLISH]-(co_author) WHERE a.name = {name} return co_author")
     Collection<Author> findCoAuthorByName(@Param("name") String name);
 	
-	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN a.name as author, collect(a.name) as cast LIMIT {limit}")
-    List<Map<String, Object>> graphByKeyword(@Param("limit") int limit, @Param("keyword") String keyword);
+	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN a LIMIT {limit}")
+	Collection<Author> graphExpertsByKeyword(@Param("limit") int limit, @Param("keyword") String keyword);
+	
+	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN a")
+	Collection<Author> graphCollaboratorsByKeyword(@Param("keyword") String keyword);
+	
+	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) where p.year = {year} and a.name = {name} return p")
+	Collection<Paper> getPaperByAuthorAndByYear(@Param("name") String name, @Param("year") String year);
 }

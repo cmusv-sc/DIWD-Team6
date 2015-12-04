@@ -44,8 +44,8 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return paperService.graph(limit == null ? 100 : limit);
     }
     
-    @RequestMapping("/graphTest")
-    public String graphTest(@RequestParam(value = "limit",required = false) Integer limit) {
+    @RequestMapping("/graphPaper2Person")
+    public String graphPaper2Person(@RequestParam(value = "limit",required = false) Integer limit) {
     	Map<String, Object> map = paperService.graphAlc(limit == null ? 10 : limit);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
@@ -55,14 +55,12 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
-    	System.out.println("================================================");
-    	System.out.println(json);
     	return json;
     }
     
-    @RequestMapping("/graphByKeyword")
+    @RequestMapping("/graphTopKByKeyword")
     public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {
-    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, name);
+    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, "test");
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -76,7 +74,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     
     @RequestMapping("/graphUserDataset")
     public String graphUserDataset(@RequestParam(value = "limit",required = false) Integer limit) {
-    	Map<String, Object> map = authorService.graphAlc();
+    	Map<String, Object> map = authorService.getCoCoAuthor("Hao Cheng");
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -85,6 +83,8 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
+//    	System.out.println("=====================================");
+//    	System.out.println(json);
     	return json;
     }
     
@@ -102,9 +102,70 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
+    
+    
+    @RequestMapping("/findExpert")
+    public String findExpert(@RequestParam(value = "limit", required = false) Integer limit,
+    		@RequestParam(value = "keyword", required = false) String keyword) {
+    	Map<String, Object> map = authorService.getExpertByKeyword(limit, keyword);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/findCollaborators")
+    public String findExpert(@RequestParam(value = "keyword", required = false) String keyword) {
+    	Map<String, Object> map = authorService.getCollaboratorsByKeyword(keyword);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/timelineOfAuthors")
+    public String timelineOfAuthors(@RequestParam(value = "startYear", required = false) Integer startYear,
+    		@RequestParam(value = "endYear", required = false) Integer endYear,
+    		@RequestParam(value = "authorList[]", required = false) String authorList[]) {
+    	Map<String, Object> map = authorService.getTimelineOfAuthors(1990, 2015, new String[] {"Krzysztof Piontek", "Margret-Ruth Oelker", "Christoph Bernau"});
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
     @RequestMapping("/getCoCoAuthor")
     public String getCoCoAuthor(@RequestParam(value = "name", required = false) String name) {
     	Map<String, Object> map = authorService.getCoCoAuthor(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/graphPerson2Person")
+    public String graphPerson2Person(@RequestParam(value = "limit", required = false) Integer limit) {
+    	Map<String, Object> map = authorService.graphPerson2Person(limit == null ? 100 : limit);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
