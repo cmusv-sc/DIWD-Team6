@@ -3,6 +3,75 @@ $(document).ready(function() {
   // var edges = null;
   // var network = null;
 
+  $('#journalGraphBtn').click(function(){
+    var journalName = $('#journalName').val();
+    $.ajax({
+      url : "/journalGraph",
+      type : "POST",
+      data : {
+        journalName : journalName
+      },
+      dataType: "text"
+    }).done(function(data) {
+      var textVal = "Potential collaborators in "+keyword;
+      $('#textArea').val(data);
+      $('#graphTitle').text(textVal);
+      draw(data);
+    })
+  });
+
+  $('#findCollabBtn').click(function() {
+    var keyword = $('#keyword').val();    
+    $.ajax({
+      url : "/findCollaborators",
+      type : "POST",
+      data : {
+        keyword : keyword
+      },
+      dataType: "text"
+    }).done(function(data) {
+      var textVal = "Potential collaborators in "+keyword;
+      $('#textArea').val(data);
+      $('#graphTitle').text(textVal);
+      draw(data);
+    })
+  });
+
+  $('#findTopPapersBtn').click(function() {
+    var keyword = $('#keyword').val();
+    $.ajax({
+      url : "/graphTopKByKeyword",
+      type : "POST",
+      data : {
+        keyword : keyword
+      },
+      dataType: "text"
+    }).done(function(data) {
+      var textVal = "Top 10 related papers in "+keyword;
+      $('#textArea').val(data);
+      $('#graphTitle').text(textVal);
+      draw(data);
+    })
+  });
+
+  $('#findExpertBtn').click(function(){
+    var keyword = $('#keyword').val();
+    alert(keyword);
+    $.ajax({
+      url : "/findExpert",
+      type : "POST",
+      data : {
+        keyword : keyword
+      },
+      dataType: "text"
+    }).done(function(data) {
+      var textVal = "Experts in "+keyword;
+      $('#textArea').val(data);
+      $('#graphTitle').text(textVal);
+      draw(data);
+    })
+  });
+
   $('#getMultiLevelCoauthorBtn').click(function() {
     var authorName = $('#authorName').val();
     $.ajax({
@@ -13,13 +82,7 @@ $(document).ready(function() {
       },
       dataType: "text"
     }).done(function(data) {
-      //alert(data);
       var textVal = ""+authorName+"'s multi-depth coauther(s)";
-      //var t = document.createElement("h4");
-      //t.value = authorName;
-      //$('#graphTitle').html(textVal);
-      //var graphTitle = document.getElementById("graphTitle");
-      //graphTitle.appendChild(t);
       $('#textArea').val(data);
       $('#graphTitle').text(textVal);
       draw(data);
@@ -48,6 +111,26 @@ $(document).ready(function() {
       draw(data);
     })
   }); 
+
+  function paperToPaper() {
+    $.ajax({
+      url : "/graphPaper2Person",
+      type : "GET",
+      dataType : "json"
+    }).done(function(data){
+      draw(data);
+    });
+  }
+
+  function personToPerson() {
+    $.ajax({
+      url : "/graphPerson2Person",
+      type : "GET",
+      dataType : "json"
+    }).done(function(data){
+      draw(data);
+    });
+  }
 
   function draw(data) {
     //var test = null;
