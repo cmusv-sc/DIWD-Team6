@@ -21,6 +21,59 @@
 	<script src="../javascript/googleAnalytics.js"></script>
 	<script type="text/javascript" src="../javascript/bootstrap.js"></script>
 	<script type="text/javascript" src="../javascript/func.js"></script>
+	<script type="text/javascript">
+		function personToPerson() {
+		    $.ajax({
+		      	url : "/graphPerson2Person",
+		      	type : "GET",
+		      	dataType : "json"
+		    }).done(function(data){
+		      	draw(data);
+		    });
+		}
+		function draw(data) {
+	    	var container = document.getElementById('networkGraph');
+		    var options = {
+			    stabilize:false,
+			    edges: {
+			        color: {
+			        	color: "gray",
+			        	highlight: "gray",
+			    	},
+			    },
+		      	nodes: {
+		        	shape: 'dot',
+		        	radiusMin: 10,
+		        	radiusMax: 30,
+		      	},
+			    groups: {
+			        user: {
+			        	color:"#F2545A",
+			        	shape:"star",
+			        },
+				    feature: {
+				        shape:"triangle",
+				        color:"#EC8F93",
+				    },
+				    service: {
+				        color:"#EF777C",
+				        shape:"dot",
+				    }
+			    },
+			    tooltip: {
+			        delay: 300,
+			        fontColor: "black",
+			        fontSize: 14, // px
+			        fontFace: "verdana",
+			        color: {
+			          	border: "#666",
+			          	background: "#FFFFC6"
+			        }
+			    }
+			}
+			var network = new vis.Network(container, data, options);
+		}
+	</script>
 </head>
 <body onload="personToPerson()">
 	<div class="container">

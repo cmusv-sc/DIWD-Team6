@@ -89,6 +89,7 @@ $(document).ready(function() {
     })
   });
 
+
   $('#getCoauthorBtn').click(function() {
     var authorName = $('#authorName').val();
     $.ajax({
@@ -112,7 +113,7 @@ $(document).ready(function() {
     })
   }); 
 
-  function paperToPaper() {
+  function paperToPerson() {
     $.ajax({
       url : "/graphPaper2Person",
       type : "GET",
@@ -123,6 +124,7 @@ $(document).ready(function() {
   }
 
   function personToPerson() {
+    alert("person to person");
     $.ajax({
       url : "/graphPerson2Person",
       type : "GET",
