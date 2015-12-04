@@ -16,6 +16,8 @@ public class Paper {
     Long id;
 
     String title;
+    
+    String year;
 
     @Relationship(type="PUBLISH", direction = Relationship.INCOMING) List<Publication> publications;
 
@@ -23,6 +25,10 @@ public class Paper {
 
     public String getTitle() {
         return title;
+    }
+    
+    public String getYear() {
+    	return year;
     }
 
     public Collection<Publication> getPublications() {

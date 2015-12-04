@@ -2,6 +2,7 @@ package neo4j.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import neo4j.domain.Author;
+import neo4j.domain.Paper;
 import neo4j.repositories.AuthorRepository;
 import neo4j.utils.Remap;
 
@@ -41,6 +43,24 @@ public class AuthorService {
 		Iterator<Author> result = authorRepository.graphCollaboratorsByKeyword(keyword).iterator();
         return toAlcFormatSingle(result);
 
+	}
+	
+	public Map<String, Object> getTimelineOfAuthors(int startYear, int endYear, String[] author) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		for (String each : author) {
+			List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+			for (int start = startYear; start <= endYear; start++) {
+				Iterator<Paper> paper = authorRepository.getPaperByAuthorAndByYear(each, start + "").iterator();
+				while(paper.hasNext()) {
+		        	Paper row = paper.next();
+		        	Map<String, Object> tempPaper = Remap.map("title", 
+		            		row.getTitle(),"year", start + "", "cluster", "2", "value", 1, "group", "paper");
+		        	nodes.add(tempPaper);
+		        }
+			}
+			result.put(each, nodes);
+	    }
+		return Remap.map("author", result);
 	} 
 	
 	public Map<String, Object> getCoCoAuthor(String name) {

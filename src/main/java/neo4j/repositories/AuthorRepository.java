@@ -25,4 +25,7 @@ public interface AuthorRepository extends GraphRepository<Author> {
 	
 	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN a")
 	Collection<Author> graphCollaboratorsByKeyword(@Param("keyword") String keyword);
+	
+	@Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) where p.year = {year} and a.name = {name} return p")
+	Collection<Paper> getPaperByAuthorAndByYear(@Param("name") String name, @Param("year") String year);
 }
