@@ -21,10 +21,10 @@ import neo4j.utils.Remap;
 public class AuthorService {
 	@Autowired AuthorRepository authorRepository;
 	
-	public Map<String, Object> graphAlc() {
-        Iterator<Author> result = authorRepository.getAllAuthor().iterator();
-        return toAlcFormatSingle(result);
-    }
+//	public Map<String, Object> graphAlc() {
+//        Iterator<Author> result = authorRepository.getAllAuthor().iterator();
+//        return toAlcFormatSingle(result);
+//    }
 	
 	public Map<String, Object> getCoAuthor(String name) {
 		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
@@ -78,6 +78,50 @@ public class AuthorService {
 			while (tempResult.hasNext()) {
 				Author au = tempResult.next();
 				if (!au.getName().equals(name)) {
+					Map<String, Object> author = Remap.map("title", 
+							au.getName(),"label", "author", "cluster", "2", "value", 1, "group", "coCoAuthor");
+	                int source = 0;
+//	                for (int j = 0; j < nodes.size(); j++) {
+//	                	if (nodes.get(j).get("title").equals(name)) {
+//	                		source = (int) nodes.get(j).get("id");
+//	                		break;
+//	                	} 
+//	                }
+	                if (source == 0) {
+	                	author.put("id", i);
+	                    source = i;
+	                    i++;
+	                    nodes.add(author);
+	                }
+
+	                rels.add(Remap.map("from", source, "to", target, "title", "CO_AUTHOR"));
+				}
+			}
+		}
+        return Remap.map("nodes", nodes, "edges", rels);
+	}
+	
+	public Map<String, Object> graphPerson2Person(int limit) {
+		List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 0;
+        int target = 0;
+        Iterator<Author> auth = authorRepository.getAllAuthor(limit).iterator();
+        List<String> authorList = new ArrayList<String>();
+        while (auth.hasNext()) {
+        	Author temp = auth.next();
+        	authorList.add(temp.getName());
+        }
+		Iterator<Author> result = authorRepository.getAllAuthor(limit).iterator();
+		while (result.hasNext()) {
+			Author row = result.next();
+			System.out.println(row.getName());
+			nodes.add(Remap.map("id", i, "title",row.getName(),"label", "author", "cluster", "1", "value", 2, "group", "coAuthor"));
+			target = i++;
+			Iterator<Author> tempResult = authorRepository.findCoAuthorByName(row.getName()).iterator();
+			while (tempResult.hasNext()) {
+				Author au = tempResult.next();
+				if (!authorList.contains(au.getName())) {
 					Map<String, Object> author = Remap.map("title", 
 							au.getName(),"label", "author", "cluster", "2", "value", 1, "group", "coCoAuthor");
 	                int source = 0;

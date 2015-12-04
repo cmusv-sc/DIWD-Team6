@@ -163,6 +163,20 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
+    @RequestMapping("/graphPerson2Person")
+    public String graphPerson2Person(@RequestParam(value = "limit", required = false) Integer limit) {
+    	Map<String, Object> map = authorService.graphPerson2Person(limit == null ? 100 : limit);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
     @RequestMapping("/getPapers")
     public Collection<Paper> getPapers(String title) {
     	return paperRepository.findByTitleContaining(title);
