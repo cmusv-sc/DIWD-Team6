@@ -60,9 +60,9 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
-    @RequestMapping("/graphByKeyword")
+    @RequestMapping("/graphTopKByKeyword")
     public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {
-    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, name);
+    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, "test");
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -76,7 +76,23 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     
     @RequestMapping("/graphUserDataset")
     public String graphUserDataset(@RequestParam(value = "limit",required = false) Integer limit) {
-    	Map<String, Object> map = authorService.graphAlc();
+    	Map<String, Object> map = authorService.getCoCoAuthor("Hao Cheng");
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+//    	System.out.println("=====================================");
+//    	System.out.println(json);
+    	return json;
+    }
+    
+    @RequestMapping("/getCoAuthor")
+    public String getCoAuthor(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = authorService.getCoAuthor(name);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -88,9 +104,10 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
-    @RequestMapping("/getCoAuthor")
-    public String getCoAuthor(@RequestParam(value = "name", required = false) String name) {
-    	Map<String, Object> map = authorService.getCoAuthor(name);
+    @RequestMapping("/findExpert")
+    public String findExpert(@RequestParam(value = "limit", required = false) Integer limit,
+    		@RequestParam(value = "keyword", required = false) String keyword) {
+    	Map<String, Object> map = authorService.getExpertByKeyword(limit, keyword);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -113,6 +130,8 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
+    	System.out.println("=====================================");
+    	System.out.println(json);
     	return json;
     }
     

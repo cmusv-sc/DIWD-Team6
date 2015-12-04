@@ -31,6 +31,12 @@ public class AuthorService {
 
 	}
 	
+	public Map<String, Object> getExpertByKeyword(int limit, String keyword) {
+		Iterator<Author> result = authorRepository.graphByKeyword(5, "test").iterator();
+        return toAlcFormatSingle(result);
+
+	} 
+	
 	public Map<String, Object> getCoCoAuthor(String name) {
 		List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
         List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
@@ -39,27 +45,31 @@ public class AuthorService {
 		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
 		while(result.hasNext()) {
 			Author row = result.next();
+			System.out.println(row.getName());
 			nodes.add(Remap.map("id", i, "title",row.getName(),"label", "author", "cluster", "1", "value", 2, "group", "coAuthor"));
 			target = i++;
 			Iterator<Author> tempResult = authorRepository.findCoAuthorByName(row.getName()).iterator();
 			while (tempResult.hasNext()) {
-				Map<String, Object> author = Remap.map("title", 
-                		name,"label", "author", "cluster", "2", "value", 1, "group", "coCoAuthor");
-                int source = 0;
-                for (int j = 0; j < nodes.size(); j++) {
-                	if (nodes.get(j).get("title").equals(name)) {
-                		source = (int) nodes.get(j).get("id");
-                		break;
-                	} 
-                }
-                if (source == 0) {
-                	author.put("id", i);
-                    source = i;
-                    i++;
-                    nodes.add(author);
-                }
+				Author au = tempResult.next();
+				if (!au.getName().equals(name)) {
+					Map<String, Object> author = Remap.map("title", 
+							au.getName(),"label", "author", "cluster", "2", "value", 1, "group", "coCoAuthor");
+	                int source = 0;
+//	                for (int j = 0; j < nodes.size(); j++) {
+//	                	if (nodes.get(j).get("title").equals(name)) {
+//	                		source = (int) nodes.get(j).get("id");
+//	                		break;
+//	                	} 
+//	                }
+	                if (source == 0) {
+	                	author.put("id", i);
+	                    source = i;
+	                    i++;
+	                    nodes.add(author);
+	                }
 
-                rels.add(Remap.map("from", source, "to", target, "title", "CO_AUTHOR"));
+	                rels.add(Remap.map("from", source, "to", target, "title", "CO_AUTHOR"));
+				}
 			}
 		}
         return Remap.map("nodes", nodes, "edges", rels);
