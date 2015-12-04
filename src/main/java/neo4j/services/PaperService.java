@@ -89,6 +89,23 @@ public class PaperService {
         Iterator<Map<String, Object>> result = paperRepository.graphTopKByKeyword(limit, name).iterator();
         return toAlcFormat(result);
     }
+    
+//    public Map<String, Object> getCoAuthor(String name) {
+//		Iterator<Author> result = paperRepository.findCoAuthorByName(name).iterator();
+//
+//        return toAlcFormatSingle(result);
+//
+//	}
+//    private Map<String, Object> toAlcFormatSingle(Iterator<Paper> result) {
+//        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+//        while(result.hasNext()) {
+//        	Paper row = result.next();
+//        	Map<String, Object> author = Remap.map("title", 
+//            		row.getName(),"label", "author", "cluster", "2", "value", 1, "group", "author");
+//        	nodes.add(author);
+//        }
+//        return Remap.map("nodes", nodes);
+//    }
 
 }
 

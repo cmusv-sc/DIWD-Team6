@@ -24,6 +24,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
     
     @Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.title =~ ('(?i).*'+{keyword}+'.*') RETURN p.title as paper, collect(a.name) as cast LIMIT {limit}")
     List<Map<String, Object>> graphTopKByKeyword(@Param("limit") int limit, @Param("keyword") String keyword);
+    
+    @Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) where a.name = {name} return p")
+	Collection<Paper> getPaperByAuthorAndByYear(@Param("name") String name);
 }
 
 
