@@ -60,7 +60,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     
     @RequestMapping("/graphTopKByKeyword")
     public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {
-    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, "test");
+    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, name);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
