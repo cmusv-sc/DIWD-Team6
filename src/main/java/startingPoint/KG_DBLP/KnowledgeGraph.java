@@ -60,7 +60,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     
     @RequestMapping("/graphTopKByKeyword")
     public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {
-    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, name);
+    	Map<String, Object> map = paperService.graphAlcByKeyword(limit == null ? 10 : limit, "test");
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -121,7 +121,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     @RequestMapping("/findExpert")
     public String findExpert(@RequestParam(value = "limit", required = false) Integer limit,
     		@RequestParam(value = "keyword", required = false) String keyword) {
-    	Map<String, Object> map = authorService.getExpertByKeyword(limit, keyword);
+    	Map<String, Object> map = authorService.getExpertByKeyword(limit == null ? 10 : limit, keyword);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
