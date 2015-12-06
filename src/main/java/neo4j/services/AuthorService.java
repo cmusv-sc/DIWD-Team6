@@ -29,19 +29,26 @@ public class AuthorService {
 	public Map<String, Object> getCoAuthor(String name) {
 		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
 
-        return toAlcFormatSingle(result);
+        return authorToAlcFormatSingle(result);
+
+	}
+	
+	public Map<String, Object> getAuthorStatus(String name) {
+		Iterator<Paper> result = authorRepository.getPaperByAuthor(name).iterator();
+
+        return paperToAlcFormatSingle(result);
 
 	}
 	
 	public Map<String, Object> getExpertByKeyword(int limit, String keyword) {
 		Iterator<Author> result = authorRepository.graphExpertsByKeyword(limit, keyword).iterator();
-        return toAlcFormatSingle(result);
+        return authorToAlcFormatSingle(result);
 
 	}
 	
 	public Map<String, Object> getCollaboratorsByKeyword(String keyword) {
 		Iterator<Author> result = authorRepository.graphCollaboratorsByKeyword(keyword).iterator();
-        return toAlcFormatSingle(result);
+        return authorToAlcFormatSingle(result);
 
 	}
 	
@@ -71,7 +78,6 @@ public class AuthorService {
 		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
 		while(result.hasNext()) {
 			Author row = result.next();
-			System.out.println(row.getName());
 			nodes.add(Remap.map("id", i, "title",row.getName(),"label", "author", "cluster", "1", "value", 2, "group", "coAuthor"));
 			target = i++;
 			Iterator<Author> tempResult = authorRepository.findCoAuthorByName(row.getName()).iterator();
@@ -144,7 +150,7 @@ public class AuthorService {
 		}
         return Remap.map("nodes", nodes, "edges", rels);
 	}
-    private Map<String, Object> toAlcFormatSingle(Iterator<Author> result) {
+    private Map<String, Object> authorToAlcFormatSingle(Iterator<Author> result) {
         List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
         while(result.hasNext()) {
         	Author row = result.next();
@@ -153,6 +159,17 @@ public class AuthorService {
         	nodes.add(author);
         }
         return Remap.map("nodes", nodes);
+    }
+    
+    private Map<String, Object> paperToAlcFormatSingle(Iterator<Paper> result) {
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        while(result.hasNext()) {
+        	Paper row = result.next();
+        	Map<String, Object> paper = Remap.map("title", 
+            		row.getTitle(),"year", row.getYear(), "cluster", "2", "value", 1, "group", "paper");
+        	nodes.add(paper);
+        }
+        return Remap.map("nodes", nodes); 
     }
    
 }

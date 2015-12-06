@@ -18,6 +18,8 @@ public class Paper {
     String title;
     
     String year;
+    
+    String category;
 
     @Relationship(type="PUBLISH", direction = Relationship.INCOMING) List<Publication> publications;
 
@@ -29,6 +31,10 @@ public class Paper {
     
     public String getYear() {
     	return year;
+    }
+    
+    public String getCategory() {
+    	return category;
     }
 
     public Collection<Publication> getPublications() {
