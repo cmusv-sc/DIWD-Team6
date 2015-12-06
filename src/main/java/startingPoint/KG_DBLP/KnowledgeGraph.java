@@ -150,7 +150,23 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     @RequestMapping("/timelineOfAuthors")
     public String timelineOfAuthors(@RequestParam(value = "startYear", required = false) Integer startYear,
     		@RequestParam(value = "endYear", required = false) Integer endYear,
-    		@RequestParam(value = "authorList[]", required = false) String authorList[]) {
+    		@RequestParam(value = "authorList", required = false) String[] authorList) {
+    	Map<String, Object> map = authorService.getTimelineOfAuthors(1990, 2015, authorList);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/timelineOfAuthors")
+    public String categorize(@RequestParam(value = "startYear", required = false) Integer startYear,
+    		@RequestParam(value = "endYear", required = false) Integer endYear,
+    		@RequestParam(value = "keyword[]", required = false) String authorList[]) {
     	Map<String, Object> map = authorService.getTimelineOfAuthors(1990, 2015, new String[] {"Krzysztof Piontek", "Margret-Ruth Oelker", "Christoph Bernau"});
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
