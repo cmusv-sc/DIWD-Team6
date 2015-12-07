@@ -90,6 +90,108 @@ public class PaperService {
         return toAlcFormat(result);
     }
     
+    public Map<String, Object> categorizeByTime(int startYear, int endYear) {
+        Iterator<Paper> result = paperRepository.categorizeByTime(startYear + "", endYear + "").iterator();
+        return toCategorizeFormat(result);
+    }
+    
+    public Map<String, Object> categorizeByTimeAndOther(int startYear, int endYear, String channel, String[] keywordList) {
+        Iterator<Paper> result = paperRepository.categorizeByTimeAndOther(startYear + "", endYear + "", channel).iterator();
+        return toCategorizeFormatByKeywords(result, keywordList);
+    }
+    
+    private Map<String, Object> toCategorizeFormat(Iterator<Paper> result) {
+		// Database, Web, Software, Operating System, Other
+    	List<Map<String,Object>> OSNodes = new ArrayList<Map<String, Object>>();
+    	List<Map<String,Object>> DBNodes = new ArrayList<Map<String, Object>>();
+    	List<Map<String,Object>> WebNodes = new ArrayList<Map<String, Object>>();
+    	List<Map<String,Object>> SoftwareNodes = new ArrayList<Map<String, Object>>();
+    	List<Map<String,Object>> OtherNodes = new ArrayList<Map<String, Object>>();
+    	while (result.hasNext()) {
+    		Paper row = result.next();
+    		switch (row.getCategory()) {
+    		case "Database" :
+    			Map<String, Object> nodeDB = Remap.map("title", 
+                		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+    			DBNodes.add(nodeDB);
+    			break;
+    		case "Web" :
+    			Map<String, Object> nodeWeb = Remap.map("title", 
+                		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+    			WebNodes.add(nodeWeb);
+    			break;
+    		case "Software" :
+    			Map<String, Object> nodeSoftware = Remap.map("title", 
+                		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+    			SoftwareNodes.add(nodeSoftware);
+    			break;
+    		case "Operating System" :
+    			Map<String, Object> nodeOS = Remap.map("title", 
+                		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+    			OSNodes.add(nodeOS);
+    			break;
+    		case "Other" :
+    			Map<String, Object> nodeOther = Remap.map("title", 
+                		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+    			OtherNodes.add(nodeOther);
+    			break;
+    		}
+    	}
+    	return Remap.map("Database", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
+    }
+    	
+    	private Map<String, Object> toCategorizeFormatByKeywords(Iterator<Paper> result, String[] keywordList) {
+    		// Database, Web, Software, Operating System, Other
+        	List<Map<String,Object>> OSNodes = new ArrayList<Map<String, Object>>();
+        	List<Map<String,Object>> DBNodes = new ArrayList<Map<String, Object>>();
+        	List<Map<String,Object>> WebNodes = new ArrayList<Map<String, Object>>();
+        	List<Map<String,Object>> SoftwareNodes = new ArrayList<Map<String, Object>>();
+        	List<Map<String,Object>> OtherNodes = new ArrayList<Map<String, Object>>();
+        	while (result.hasNext()) {
+        		Paper row = result.next();
+        		if (containsKeyword(keywordList, row.getTitle())) {
+        			switch (row.getCategory()) {
+            		case "Database" :
+            			Map<String, Object> nodeDB = Remap.map("title", 
+                        		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+            			DBNodes.add(nodeDB);
+            			break;
+            		case "Web" :
+            			Map<String, Object> nodeWeb = Remap.map("title", 
+                        		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+            			WebNodes.add(nodeWeb);
+            			break;
+            		case "Software" :
+            			Map<String, Object> nodeSoftware = Remap.map("title", 
+                        		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+            			SoftwareNodes.add(nodeSoftware);
+            			break;
+            		case "Operating System" :
+            			Map<String, Object> nodeOS = Remap.map("title", 
+                        		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+            			OSNodes.add(nodeOS);
+            			break;
+            		case "Other" :
+            			Map<String, Object> nodeOther = Remap.map("title", 
+                        		row.getTitle(),"category", row.getCategory(), "cluster", "2", "value", 1, "group", "paper");
+            			OtherNodes.add(nodeOther);
+            			break;
+            		}
+        		}
+        	}
+    	return Remap.map("Database", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
+    }
+    	private boolean containsKeyword(String[] keywordList, String name) {
+    		for (String each : keywordList) {
+    			if (name.contains(each)) {
+    				return true;
+    			}
+    		}
+    		return false;
+    	}
+    
+    
+    
 
 }
 

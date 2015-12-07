@@ -151,7 +151,7 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     public String timelineOfAuthors(@RequestParam(value = "startYear", required = false) Integer startYear,
     		@RequestParam(value = "endYear", required = false) Integer endYear,
     		@RequestParam(value = "authorList", required = false) String[] authorList) {
-    	Map<String, Object> map = authorService.getTimelineOfAuthors(1990, 2015, authorList);
+    	Map<String, Object> map = authorService.getTimelineOfAuthors(startYear, endYear, authorList);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
@@ -163,11 +163,17 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
-    @RequestMapping("/timelineOfAuthors")
+    @RequestMapping("/categorize")
     public String categorize(@RequestParam(value = "startYear", required = false) Integer startYear,
     		@RequestParam(value = "endYear", required = false) Integer endYear,
-    		@RequestParam(value = "keyword[]", required = false) String authorList[]) {
-    	Map<String, Object> map = authorService.getTimelineOfAuthors(1990, 2015, new String[] {"Krzysztof Piontek", "Margret-Ruth Oelker", "Christoph Bernau"});
+    		@RequestParam(value = "channel", required = false) String channel,
+    		@RequestParam(value = "keywordList", required = false) String[] keywordList) {
+    	Map<String, Object> map;
+    	if (channel != null && keywordList != null) {
+    		map = paperService.categorizeByTimeAndOther(startYear, endYear, channel, keywordList);
+    	} else {
+    		map = paperService.categorizeByTime(startYear, endYear);
+    	}
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
