@@ -121,6 +121,19 @@ public class PaperService {
         return toAlcFormat(result);
     }
     
+    public Map<String, Object> getPaperInfo(String name) {
+        Iterator<Paper> result = paperRepository.getPaperByName(name + ".").iterator();
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        while(result.hasNext()) {
+        	Paper row = result.next();
+        	Map<String, Object> paper = Remap.map("title", 
+            		row.getTitle(),"year", row.getYear(), "category", row.getCategory(),
+            		"booktitle", row.getBookTitle(), "channel", row.getChannel(), "cite", row.getCite());
+        	nodes.add(paper);
+        }
+        return Remap.map("Information", nodes); 
+    }
+    
     public Map<String, Object> categorizeByTime(int startYear, int endYear) {
         Iterator<Paper> result = paperRepository.categorizeByTime(startYear + "", endYear + "").iterator();
         return toCategorizeFormat(result);

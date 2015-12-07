@@ -19,6 +19,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
     @Query("MATCH (p:Paper) WHERE p.title =~ ('(?i).*'+{title}+'.*') RETURN p")
     Collection<Paper> findByTitleContaining(@Param("title") String title);
     
+    @Query("MATCH (p:Paper) WHERE p.title = {title} RETURN p")
+    Collection<Paper> getPaperByName(@Param("title") String title);
+    
     @Query("MATCH (p:Paper) WHERE p.cite IS NOT NULL RETURN p LIMIT {limit}")
     Collection<Paper> getPaper(@Param("limit") int limit);
 

@@ -115,6 +115,20 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
+    @RequestMapping("/getPaperInfo")
+    public String getPaperInfo(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = paperService.getPaperInfo(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
     @RequestMapping("/getAuthorStatus")
     public String getAuthorStatus(@RequestParam(value = "name", required = false) String name) {
     	Map<String, Object> map = authorService.getAuthorStatus(name);
