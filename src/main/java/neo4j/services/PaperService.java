@@ -144,6 +144,65 @@ public class PaperService {
         return toCategorizeFormatByKeywords(result, keywordList);
     }
     
+    public Map<String, Object> getJournalEvolution(int startYear, int endYear, String name) {
+        //Iterator<Paper> result = paperRepository.getJournalEvolution(startYear + "", endYear + "").iterator();
+    	List<Map<String,Object>> result = new ArrayList<Map<String, Object>>();
+		while (startYear <= endYear) {
+			Iterator<Paper> tempResult = paperRepository.getJournalEvolution(startYear + "", name).iterator();
+			int[] record = new int[5];
+			while (tempResult.hasNext()) {
+				Paper row = tempResult.next();
+				switch (row.getCategory()) {
+	    		case "Database" :
+	    			record[0]++;
+	    			break;
+	    		case "Web" :
+	    			record[1]++;
+	    			break;
+	    		case "Software" :
+	    			record[2]++;
+	    			break;
+	    		case "Operating System" :
+	    			record[3]++;
+	    			break;
+	    		case "Other" :
+	    			record[4]++;
+	    			break;
+	    		}
+			}
+			int maxIndex = 0;
+			int max = record[0];
+			for (int i = 1; i < 5; i++) {
+				if (record[i] > max) {
+					max = record[i];
+					maxIndex = i;
+				}
+			}
+			String topic = "";
+			switch (maxIndex) {
+    		case 0 :
+    			topic = "Database";
+    			break;
+    		case 1 :
+    			topic = "Web";
+    			break;
+    		case 2 :
+    			topic = "Software";
+    			break;
+    		case 3 :
+    			topic = "Operating System";
+    			break;
+    		case 4 :
+    			record[4]++;
+    			topic = "Other";
+    			break;
+    		}
+			result.add(Remap.map("Year", startYear + "", "topic", topic));
+			startYear++;
+		}
+		return Remap.map("Evolution", result);
+    }
+    
     private Map<String, Object> toCategorizeFormat(Iterator<Paper> result) {
 		// Database, Web, Software, Operating System, Other
     	List<Map<String,Object>> OSNodes = new ArrayList<Map<String, Object>>();

@@ -129,6 +129,8 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
+    
+    
     @RequestMapping("/getAuthorStatus")
     public String getAuthorStatus(@RequestParam(value = "name", required = false) String name) {
     	Map<String, Object> map = authorService.getAuthorStatus(name);
@@ -193,6 +195,22 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     		@RequestParam(value = "endYear", required = false) Integer endYear,
     		@RequestParam(value = "authorList", required = false) String[] authorList) {
     	Map<String, Object> map = authorService.getTimelineOfAuthors(startYear, endYear, authorList);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/getJournalEvolution")
+    public String getJournalEvolution(@RequestParam(value = "startYear", required = false) Integer startYear,
+    		@RequestParam(value = "endYear", required = false) Integer endYear,
+    		@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = paperService.getJournalEvolution(startYear, endYear, name);
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {

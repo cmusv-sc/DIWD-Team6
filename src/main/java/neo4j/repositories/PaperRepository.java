@@ -34,6 +34,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
     @Query("MATCH (p:Paper) WHERE p.year >= {startYear} and p.year <= {endYear}  RETURN p")
     Collection<Paper> categorizeByTime(@Param("startYear") String startYear, @Param("endYear") String endYear);
     
+    @Query("MATCH (p:Paper) WHERE p.year = {year} and p.booktitle = {name}  RETURN p")
+    Collection<Paper> getJournalEvolution(@Param("year") String year, @Param("name") String name);
+    
     @Query("MATCH (p:Paper) WHERE p.year >= {startYear} and p.year <= {endYear} and p.channel = {channel} RETURN p")
     Collection<Paper> categorizeByTimeAndOther(@Param("startYear") String startYear, @Param("endYear") String endYear, @Param("channel") String channel);
     
