@@ -221,6 +221,20 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	}
     	return json;
     }
+    @RequestMapping("/getTopKCitedPaper")
+    public String getTopKCitedPaper(@RequestParam(value = "year", required = false) Integer year,
+    		@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = paperService.getTopKCitedPaper(year, name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
     
     @RequestMapping("/categorize")
     public String categorize(@RequestParam(value = "startYear", required = false) Integer startYear,

@@ -22,6 +22,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
     @Query("MATCH (p:Paper) WHERE p.title = {title} RETURN p")
     Collection<Paper> getPaperByName(@Param("title") String title);
     
+    @Query("MATCH (p:Paper) RETURN p")
+    Collection<Paper> getAllPaper();
+    
     @Query("MATCH (p:Paper) WHERE p.cite IS NOT NULL RETURN p LIMIT {limit}")
     Collection<Paper> getPaper(@Param("limit") int limit);
 
@@ -36,6 +39,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
     
     @Query("MATCH (p:Paper) WHERE p.year = {year} and p.booktitle = {name}  RETURN p")
     Collection<Paper> getJournalEvolution(@Param("year") String year, @Param("name") String name);
+    
+    @Query("MATCH (p:Paper) WHERE p.year = {year} and p.channel = {name}  RETURN p")
+    Collection<Paper> getPaperByChannel(@Param("year") String year, @Param("name") String name);
     
     @Query("MATCH (p:Paper) WHERE p.year >= {startYear} and p.year <= {endYear} and p.channel = {channel} RETURN p")
     Collection<Paper> categorizeByTimeAndOther(@Param("startYear") String startYear, @Param("endYear") String endYear, @Param("channel") String channel);

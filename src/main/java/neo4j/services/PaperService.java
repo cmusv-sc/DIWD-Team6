@@ -121,6 +121,20 @@ public class PaperService {
         return toAlcFormat(result);
     }
     
+    public Map<String, Object> getTopKCitedPaper(int year, String name) {
+        Iterator<Paper> result = paperRepository.getPaperByChannel(year + "", name).iterator();
+        List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        int max = 1;
+        while (result.hasNext() && max < 11) {
+        	Paper row = result.next();
+        	if (row.getCite() != null) {
+        		nodes.add(Remap.map("Name", row.getCite(), "rank", max + ""));
+            	max++;
+        	}
+        }
+        return Remap.map("Result", nodes);
+    }
+    
     public Map<String, Object> getPaperInfo(String name) {
         Iterator<Paper> result = paperRepository.getPaperByName(name + ".").iterator();
         List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
