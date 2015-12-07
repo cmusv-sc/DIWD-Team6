@@ -57,6 +57,19 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	}
     	return json;
     }
+    @RequestMapping("/graphPaper2Paper")
+    public String graphPaper2Paper(@RequestParam(value = "limit",required = false) Integer limit) {
+    	Map<String, Object> map = paperService.graphPaper2Paper(limit == null ? 10 : limit);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
     
     @RequestMapping("/graphTopKByKeyword")
     public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {

@@ -18,6 +18,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
 
     @Query("MATCH (p:Paper) WHERE p.title =~ ('(?i).*'+{title}+'.*') RETURN p")
     Collection<Paper> findByTitleContaining(@Param("title") String title);
+    
+    @Query("MATCH (p:Paper) WHERE p.cite IS NOT NULL RETURN p LIMIT {limit}")
+    Collection<Paper> getPaper(@Param("limit") int limit);
 
     @Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) RETURN p.title as paper, collect(a.name) as cast LIMIT {limit}")
     List<Map<String, Object>> graph(@Param("limit") int limit);
@@ -30,6 +33,9 @@ public interface PaperRepository extends GraphRepository<Paper> {
     
     @Query("MATCH (p:Paper) WHERE p.year >= {startYear} and p.year <= {endYear} and p.channel = {channel} RETURN p")
     Collection<Paper> categorizeByTimeAndOther(@Param("startYear") String startYear, @Param("endYear") String endYear, @Param("channel") String channel);
+    
+//    @Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.cite =~ ('(?i).*'+{keyword}+'.*') RETURN p LIMIT {limit}")
+//    Collection<Paper> getPaperByCite(@Param("limit") int limit, @Param("keyword") String keyword);
 }
 
 

@@ -24,6 +24,8 @@ public class Paper {
     String channel;
     
     String bookTitle;
+    
+    String cite;
 
     @Relationship(type="PUBLISH", direction = Relationship.INCOMING) List<Publication> publications;
 
@@ -51,6 +53,10 @@ public class Paper {
 
     public Collection<Publication> getPublications() {
         return publications;
+    }
+    
+    public String getCite() {
+    	return cite;
     }
 }
 

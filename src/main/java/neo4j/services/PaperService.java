@@ -85,6 +85,37 @@ public class PaperService {
         return toAlcFormat(result);
     }
     
+    public Map<String, Object> graphPaper2Paper(int limit) {
+    	List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+        List<Map<String,Object>> rels = new ArrayList<Map<String, Object>>();
+        int i = 0;
+        int target = 0;
+        Iterator<Paper> result = paperRepository.getPaper(limit).iterator();
+        while (result.hasNext()) {
+        	Paper row = result.next();
+        	nodes.add(Remap.map("id", i, "title",row.getTitle(),"label", "paper", "cluster", "1", "value", 2, "group", "Basedpaper"));
+        	target++;
+        	Iterator<Paper> tempResult = paperRepository.findByTitleContaining(row.getCite()).iterator();
+        	while (tempResult.hasNext()) {
+				Paper pa = tempResult.next();
+				if (!pa.getTitle().equals(row.getTitle())) {
+					Map<String, Object> paper = Remap.map("title", 
+							pa.getTitle(),"label", "paper", "cluster", "2", "value", 1, "group", "CoPaper");
+	                int source = 0;
+	                if (source == 0) {
+	                	paper.put("id", i);
+	                    source = i;
+	                    i++;
+	                    nodes.add(paper);
+	                }
+
+	                rels.add(Remap.map("from", source, "to", target, "title", "CO_AUTHOR"));
+				}
+			}
+        }
+        return Remap.map("nodes", nodes, "edges", rels);
+    }
+    
     public Map<String, Object> graphAlcByKeyword(int limit, String name) {
         Iterator<Map<String, Object>> result = paperRepository.graphTopKByKeyword(limit, name).iterator();
         return toAlcFormat(result);
