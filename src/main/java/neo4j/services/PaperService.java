@@ -2,6 +2,7 @@ package neo4j.services;
 
 import neo4j.domain.Author;
 import neo4j.domain.Paper;
+import neo4j.repositories.AuthorRepository;
 import neo4j.repositories.PaperRepository;
 import neo4j.utils.Remap;
 
@@ -17,7 +18,6 @@ import java.util.Map.Entry;
 public class PaperService {
 
     @Autowired PaperRepository paperRepository;
-
     private Map<String, Object> toD3Format(Iterator<Map<String, Object>> result) {
         List<Map<String,Object>> nodes = new ArrayList<Map<String,Object>>();
         List<Map<String,Object>> rels = new ArrayList<Map<String,Object>>();
@@ -221,7 +221,7 @@ public class PaperService {
     		return false;
     	}
     
-    
+   
     
 
 }

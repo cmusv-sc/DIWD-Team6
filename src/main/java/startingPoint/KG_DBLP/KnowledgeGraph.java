@@ -129,6 +129,20 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
+    @RequestMapping("/journalGraph")
+    public String journalGraph(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = authorService.getJournalGraph(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
     
     
     @RequestMapping("/findExpert")

@@ -34,8 +34,7 @@ public interface PaperRepository extends GraphRepository<Paper> {
     @Query("MATCH (p:Paper) WHERE p.year >= {startYear} and p.year <= {endYear} and p.channel = {channel} RETURN p")
     Collection<Paper> categorizeByTimeAndOther(@Param("startYear") String startYear, @Param("endYear") String endYear, @Param("channel") String channel);
     
-//    @Query("MATCH (p:Paper)<-[:PUBLISH]-(a:Author) WHERE p.cite =~ ('(?i).*'+{keyword}+'.*') RETURN p LIMIT {limit}")
-//    Collection<Paper> getPaperByCite(@Param("limit") int limit, @Param("keyword") String keyword);
+    
 }
 
 

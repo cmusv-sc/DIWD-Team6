@@ -21,11 +21,27 @@ import neo4j.utils.Remap;
 public class AuthorService {
 	@Autowired AuthorRepository authorRepository;
 	
-//	public Map<String, Object> graphAlc() {
-//        Iterator<Author> result = authorRepository.getAllAuthor().iterator();
-//        return toAlcFormatSingle(result);
-//    }
-	
+	 public Map<String, Object> getJournalGraph(String name) {
+		 	List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
+	    	Iterator<Author> result = authorRepository.getJournalGraphByName(name).iterator();
+	    	HashMap<String, Integer> record = new HashMap<String, Integer>();
+	    	while (result.hasNext()) {
+	    		Author row = result.next();
+	    		if (record.containsKey(row.getName())) {
+	    			record.put(row.getName(), record.get(row.getName()) + 1);
+	    		} else {
+	    			record.put(row.getName(), 1);
+	    		}
+	    	}
+	    	Iterator it = record.entrySet().iterator();
+	    	Iterator<Author> temp = authorRepository.getJournalGraphByName(name).iterator();
+	        while (temp.hasNext()) {
+	        	Author au = temp.next();
+	        	nodes.add(Remap.map("Name", au.getName(), "Contribution", record.get(au.getName())));
+	        }
+
+	    	return Remap.map("Contributions", nodes);
+	    }
 	public Map<String, Object> getCoAuthor(String name) {
 		Iterator<Author> result = authorRepository.findCoAuthorByName(name).iterator();
 
