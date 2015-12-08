@@ -94,7 +94,7 @@ public class PaperService {
         while (result.hasNext()) {
         	Paper row = result.next();
         	nodes.add(Remap.map("id", i, "title",row.getTitle(),"label", "paper", "cluster", "1", "value", 2, "group", "Basedpaper"));
-        	target++;
+        	target = i++;
         	Iterator<Paper> tempResult = paperRepository.findByTitleContaining(row.getCite()).iterator();
         	while (tempResult.hasNext()) {
 				Paper pa = tempResult.next();
