@@ -7,9 +7,23 @@
 	    	padding-top: 60px;
 	      	padding-bottom: 40px;
     	}
-    	#networkGraph {
-    		height: 400px;
-    	}
+    	
+    	.link {
+			fill: none;
+			stroke: #666;
+			stroke-width: 1.5px;
+		}
+
+		.node circle {
+			fill: #ccc;
+			stroke: #fff;
+			stroke-width: 1.5px;
+		}
+
+		text {
+			font: 10px sans-serif;
+			pointer-events: none;
+		}
 	</style>
 	<link href="../css/metro-bootstrap.css" rel="stylesheet" type="text/css" />
 	<link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
@@ -20,8 +34,8 @@
 	<script type="text/javascript" src="../javascript/jquery-2.1.4.js"></script>
 	<script src="../javascript/googleAnalytics.js"></script>
 	<script type="text/javascript" src="../javascript/bootstrap.js"></script>
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="../javascript/func.js"></script>
-	
 </head>
 <body>
 	<div class="container">
@@ -39,8 +53,8 @@
 		<!-- content -->
 		<div class="container">
 			<div class="row">
-				<div class="col-mid-4 col-md-offset-5">
-					<h2>Find Coauthors</h2>
+				<div>
+					<h2 align="center">Find Coauthors</h2>
 				</div>
 			</div>
 			<div class="row">
@@ -50,15 +64,15 @@
 					</div>
 					<textarea class="form-control" id="textArea" rows="5"></textarea>
 					<br>
-					<div class="col-md-4 col-md-offset-5">
+					<div align="center">
 						<button class="btn btn-primary" id="getMultiLevelCoauthorBtn">Submit</button>
 					</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4 col-md-offset-5">
-					<h4 id="graphTitle"></h4>	
+				<div>
+					<h4 id="graphTitle" align="center"></h4>	
 				</div>
-				<div id="networkGraph" class="col-lg-6 col-lg-offset-3">
+				<div id="svgDiv" class="col-lg-6">
 				</div>
 			</div>
 		</div>
