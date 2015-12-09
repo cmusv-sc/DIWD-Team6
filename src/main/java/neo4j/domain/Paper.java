@@ -18,6 +18,14 @@ public class Paper {
     String title;
     
     String year;
+    
+    String category;
+    
+    String channel;
+    
+    String bookTitle;
+    
+    String cite;
 
     @Relationship(type="PUBLISH", direction = Relationship.INCOMING) List<Publication> publications;
 
@@ -30,9 +38,25 @@ public class Paper {
     public String getYear() {
     	return year;
     }
+    
+    public String getCategory() {
+    	return category;
+    }
+    
+    public String getChannel() {
+    	return channel;
+    }
+    
+    public String getBookTitle() {
+    	return bookTitle;
+    }
 
     public Collection<Publication> getPublications() {
         return publications;
+    }
+    
+    public String getCite() {
+    	return cite;
     }
 }
 

@@ -57,6 +57,19 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	}
     	return json;
     }
+    @RequestMapping("/graphPaper2Paper")
+    public String graphPaper2Paper(@RequestParam(value = "limit",required = false) Integer limit) {
+    	Map<String, Object> map = paperService.graphPaper2Paper(limit == null ? 10 : limit);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
     
     @RequestMapping("/graphTopKByKeyword")
     public String graphByKeyword(@RequestParam(value = "limit",required = false) Integer limit, @RequestParam(value = "name",required = false) String name) {
@@ -102,19 +115,49 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     	return json;
     }
     
-//    @RequestMapping("/getAuthorStatus")
-//    public String getAuthorStatus(@RequestParam(value = "name", required = false) String name) {
-//    	Map<String, Object> map = paperService.getAuthorStatus(name);
-//    	String json = "";
-//    	ObjectMapper mapper = new ObjectMapper();
-//    	try {
-//    		//convert map to JSON string
-//    		json = mapper.writeValueAsString(map);
-//    	} catch (Exception e) {
-//    		e.printStackTrace();
-//    	}
-//    	return json;
-//    }
+    @RequestMapping("/getPaperInfo")
+    public String getPaperInfo(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = paperService.getPaperInfo(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    
+    
+    @RequestMapping("/getAuthorStatus")
+    public String getAuthorStatus(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = authorService.getAuthorStatus(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/journalGraph")
+    public String journalGraph(@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = authorService.getJournalGraph(name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
     
     
     
@@ -150,8 +193,60 @@ public class KnowledgeGraph extends WebMvcConfigurerAdapter {
     @RequestMapping("/timelineOfAuthors")
     public String timelineOfAuthors(@RequestParam(value = "startYear", required = false) Integer startYear,
     		@RequestParam(value = "endYear", required = false) Integer endYear,
-    		@RequestParam(value = "authorList[]", required = false) String authorList[]) {
-    	Map<String, Object> map = authorService.getTimelineOfAuthors(1990, 2015, new String[] {"Krzysztof Piontek", "Margret-Ruth Oelker", "Christoph Bernau"});
+    		@RequestParam(value = "authorList", required = false) String[] authorList) {
+    	Map<String, Object> map = authorService.getTimelineOfAuthors(startYear, endYear, authorList);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/getJournalEvolution")
+    public String getJournalEvolution(@RequestParam(value = "startYear", required = false) Integer startYear,
+    		@RequestParam(value = "endYear", required = false) Integer endYear,
+    		@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = paperService.getJournalEvolution(startYear, endYear, name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    @RequestMapping("/getTopKCitedPaper")
+    public String getTopKCitedPaper(@RequestParam(value = "year", required = false) Integer year,
+    		@RequestParam(value = "name", required = false) String name) {
+    	Map<String, Object> map = paperService.getTopKCitedPaper(year, name);
+    	String json = "";
+    	ObjectMapper mapper = new ObjectMapper();
+    	try {
+    		//convert map to JSON string
+    		json = mapper.writeValueAsString(map);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return json;
+    }
+    
+    @RequestMapping("/categorize")
+    public String categorize(@RequestParam(value = "startYear", required = false) Integer startYear,
+    		@RequestParam(value = "endYear", required = false) Integer endYear,
+    		@RequestParam(value = "channel", required = false) String channel,
+    		@RequestParam(value = "keywordList", required = false) String[] keywordList) {
+    	Map<String, Object> map;
+    	if (channel != null && keywordList != null) {
+    		map = paperService.categorizeByTimeAndOther(startYear, endYear, channel, keywordList);
+    	} else {
+    		map = paperService.categorizeByTime(startYear, endYear);
+    	}
     	String json = "";
     	ObjectMapper mapper = new ObjectMapper();
     	try {
