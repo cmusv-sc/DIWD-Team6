@@ -93,9 +93,10 @@ public class PaperService {
         Iterator<Paper> result = paperRepository.getPaper(limit).iterator();
         while (result.hasNext()) {
         	Paper row = result.next();
-        	nodes.add(Remap.map("id", i, "title",row.getTitle(),"label", "paper", "cluster", "1", "value", 2, "group", "Basedpaper"));
+        	String [] cite = row.getCite().split("/");
+        	nodes.add(Remap.map("id", i, "title",row.getTitle(),"label", "paper", "cite", cite[2], "value", 2, "group", "Basedpaper"));
         	target = i++;
-        	Iterator<Paper> tempResult = paperRepository.findByTitleContaining(row.getCite()).iterator();
+        	Iterator<Paper> tempResult = paperRepository.findByTitleContaining(cite[2]).iterator();
         	while (tempResult.hasNext()) {
 				Paper pa = tempResult.next();
 				if (!pa.getTitle().equals(row.getTitle())) {
