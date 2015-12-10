@@ -156,6 +156,10 @@ $(document).ready(function() {
     })
   }); 
 
+  $('.node').click(function() {
+    alert("hahahaha");
+  })
+
   function paperToPerson() {
     $.ajax({
       url : "/graphPaper2Person",
@@ -208,6 +212,7 @@ $(document).ready(function() {
                   .attr("class", "node")
                   //.attr("r", 8)
                   //.style("fill", function(d){return color(d.cluster);})
+                  .on("click", fClick)
                   .call(force.drag);
     node.append("circle")
         .attr("r", 12)
@@ -219,6 +224,11 @@ $(document).ready(function() {
         .text(function(d) {
           return d.title;
         });
+
+    function fClick() {
+      var t = d3.select(this).select("text").text();
+      console.log(t);
+    }
     function tick() {
       link
         .attr("x1", function(d) { return d.source.x; })

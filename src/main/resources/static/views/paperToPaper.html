@@ -7,9 +7,6 @@
 	    	padding-top: 60px;
 	      	padding-bottom: 40px;
     	}
-    	#networkGraph {
-    		height: 400px;
-    	}
     	.link {
 			fill: none;
 			stroke: #666;
@@ -37,7 +34,7 @@
 	<script src="../javascript/googleAnalytics.js"></script>
 	<script type="text/javascript" src="../javascript/bootstrap.js"></script>
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="../javascript/func.js"></script>
+	<script type="text/javascript" src="../javascript/paperToPaper.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -56,23 +53,12 @@
 		<div class="container">
 			<div class="row">
 				<div>
-					<h2 align="center">Find Coauthors</h2>
+					<h2 align="center">Paper to Paper Network</h2>
 				</div>
-			</div>
-			<div class="row">
-					<div class="form-group">
-						<label>Author name</label>
-						<input type="text" class="form-control" id="authorName">
-					</div>
- 					<div align="center">
-						<button class="btn btn-primary" id="getCoauthorBtn">Submit</button>
-					</div>
 			</div>
 			<div class="row">
 				<div>
 					<h4 id="graphTitle" align="center"></h4>	
-				</div>
-				<div id="svgDiv" class="col-lg-6">
 				</div>
 			</div>
 		</div>

@@ -7,9 +7,22 @@
 	    	padding-top: 60px;
 	      	padding-bottom: 40px;
     	}
-    	#networkGraph {
-    		height: 400px;
-    	}
+    	.link {
+			fill: none;
+			stroke: #666;
+			stroke-width: 1.5px;
+		}
+
+		.node circle {
+			fill: #ccc;
+			stroke: #fff;
+			stroke-width: 1.5px;
+		}
+
+		text {
+			font: 10px sans-serif;
+			pointer-events: none;
+		}
 	</style>
 	<link href="../css/metro-bootstrap.css" rel="stylesheet" type="text/css" />
 	<link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
@@ -20,62 +33,10 @@
 	<script type="text/javascript" src="../javascript/jquery-2.1.4.js"></script>
 	<script src="../javascript/googleAnalytics.js"></script>
 	<script type="text/javascript" src="../javascript/bootstrap.js"></script>
-	<script type="text/javascript" src="../javascript/func.js"></script>
-	<script type="text/javascript">
-		function personToPerson() {
-		    $.ajax({
-		      	url : "/graphPerson2Person",
-		      	type : "GET",
-		      	dataType : "json"
-		    }).done(function(data){
-		      	draw(data);
-		    });
-		}
-		function draw(data) {
-	    	var container = document.getElementById('networkGraph');
-		    var options = {
-			    stabilize:false,
-			    edges: {
-			        color: {
-			        	color: "gray",
-			        	highlight: "gray",
-			    	},
-			    },
-		      	nodes: {
-		        	shape: 'dot',
-		        	radiusMin: 10,
-		        	radiusMax: 30,
-		      	},
-			    groups: {
-			        user: {
-			        	color:"#F2545A",
-			        	shape:"star",
-			        },
-				    feature: {
-				        shape:"triangle",
-				        color:"#EC8F93",
-				    },
-				    service: {
-				        color:"#EF777C",
-				        shape:"dot",
-				    }
-			    },
-			    tooltip: {
-			        delay: 300,
-			        fontColor: "black",
-			        fontSize: 14, // px
-			        fontFace: "verdana",
-			        color: {
-			          	border: "#666",
-			          	background: "#FFFFC6"
-			        }
-			    }
-			}
-			var network = new vis.Network(container, data, options);
-		}
-	</script>
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../javascript/personToPerson.js"></script>
 </head>
-<body onload="personToPerson()">
+<body>
 	<div class="container">
 		<!-- navbar -->
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -91,15 +52,13 @@
 		<!-- content -->
 		<div class="container">
 			<div class="row">
-				<div class="col-mid-4 col-md-offset-4">
-					<h2>Paper to Person Network</h2>
+				<div>
+					<h2 align="center">Person to Person Network</h2>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4 col-md-offset-5">
-					<h4 id="graphTitle"></h4>	
-				</div>
-				<div id="networkGraph" class="col-lg-6 col-lg-offset-3">
+				<div>
+					<h4 id="graphTitle" align="center"></h4>	
 				</div>
 			</div>
 		</div>
