@@ -80,10 +80,12 @@ public class AuthorService {
 		        	Map<String, Object> tempPaper = Remap.map("title", 
 		            		row.getTitle(),"group", "paper");
 		        	papers.add(tempPaper);
-		        	nodes.add(Remap.map("year", start, "publication", papers));
 		        }
+				if (!papers.isEmpty()) {
+					nodes.add(Remap.map("year", start, "publication", papers));
+				}
 			}
-			result.add(Remap.map("name", each, "publication", nodes));
+			result.add(Remap.map("name", each, "year", nodes));
 	    }
 		return Remap.map("author", result);
 	} 
