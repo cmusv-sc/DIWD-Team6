@@ -73,12 +73,14 @@ public class AuthorService {
 		for (String each : author) {
 			List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
 			for (int start = startYear; start <= endYear; start++) {
+				List<Map<String,Object>> papers = new ArrayList<Map<String, Object>>();
 				Iterator<Paper> paper = authorRepository.getPaperByAuthorAndByYear(each, start + "").iterator();
 				while(paper.hasNext()) {
 		        	Paper row = paper.next();
 		        	Map<String, Object> tempPaper = Remap.map("title", 
-		            		row.getTitle(),"year", start + "", "cluster", "2", "value", 1, "group", "paper");
-		        	nodes.add(tempPaper);
+		            		row.getTitle(),"group", "paper");
+		        	papers.add(tempPaper);
+		        	nodes.add(Remap.map("year", start, "publication", papers));
 		        }
 			}
 			result.add(Remap.map("name", each, "publication", nodes));
