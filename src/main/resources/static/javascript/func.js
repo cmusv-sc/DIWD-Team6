@@ -4,7 +4,7 @@ $(document).ready(function() {
   // var network = null;
   
   $('#findCollabBtn').click(function() {
-    var keyword = $('#keyword').val();    
+    var keyword = $('#keyword').val();
     $.ajax({
       url : "/findCollaborators",
       type : "POST",
@@ -13,9 +13,6 @@ $(document).ready(function() {
       },
       dataType: "json"
     }).done(function(data) {
-      var textVal = "Potential collaborators in "+keyword;
-      $('#textArea').val(JSON.stringify(data));
-      $('#graphTitle').text(textVal);
       var nodes = data.nodes;
       nodes.push({
         cluster : 10,
@@ -46,10 +43,14 @@ $(document).ready(function() {
       },
       dataType: "json"
     }).done(function(data) {
-      var textVal = "Top 10 related papers in "+keyword;
-      $('#textArea').val(data);
-      $('#graphTitle').text(textVal);
-      draw(data);
+      var nodes = data.nodes;
+      var edges = data.edges;
+      edges.forEach(function(edge){
+        edge.source = edge.from-1;
+        edge.target = edge.to-1;
+      });
+      console.log(JSON.stringify(edges));
+      drawGraphD3(nodes, edges);
     })
   });
 
@@ -64,9 +65,6 @@ $(document).ready(function() {
       },
       dataType: "json"
     }).done(function(data) {
-      var textVal = "Experts in "+keyword;
-      //$('#textArea').val(JSON.stringify(data));
-      $('#graphTitle').text(textVal);
       var nodes = data.nodes;
       nodes.push({
         cluster : 10,
@@ -87,106 +85,93 @@ $(document).ready(function() {
     })
   });
 
-  $('#getMultiLevelCoauthorBtn').click(function() {
+  $('#getCoauthorBtn').click(function() {
     var authorName = $('#authorName').val();
-    $.ajax({
-      url : "/getCoCoAuthor",
-      type : "POST",
-      data : {
-        name : authorName
-      },
-      dataType: "json"
-    }).done(function(data) {
-      var textVal = ""+authorName+"'s multi-depth coauther(s)";
-      $('#textArea').val(JSON.stringify(data));
-      $('#graphTitle').text(textVal);
-      var nodes = data.nodes;
-      var edges = data.edges;
-      //{"cluster":"1","id":0,"label":"author","title":"Robert Neßelrath",
-      //"value":2,"group":"coAuthor"
-      //add author
-      nodes.push({
-        cluster : "0",
-        id : nodes.length,
-        label : "author",
-        title : authorName,
-        value : 1,
-        group : "author"
+    var select = $('#select option:selected').val();
+    if(select == 2) {
+      $.ajax({
+        url : "/getCoCoAuthor",
+        type : "POST",
+        data : {
+          name : authorName
+        },
+        dataType: "json"
+      }).done(function(data) {
+        var nodes = data.nodes;
+        var edges = data.edges;
+        //add author
+        nodes.push({
+          cluster : "0",
+          id : nodes.length,
+          label : "author",
+          title : authorName,
+          value : 1,
+          group : "author"
+        })
+        var sourceId = nodes.length-1;
+        for(i = 0; i < nodes.length-1; i++) {
+          if(nodes[i].cluster == "1") {
+            edges.push({
+              title : "CO_AUTHOR",
+              from : sourceId,
+              to : nodes[i].id
+            });
+          }
+        }
+        edges.forEach(function(edge){
+          //edge.weight = 1;
+          edge.source = edge.from;
+          edge.target = edge.to;
+        });
+        drawGraphD3(nodes, edges);
       })
-      //{"title":"CO_AUTHOR","from":1,"to":0}
-      var sourceId = nodes.length-1;
-      for(i = 0; i < nodes.length-1; i++) {
-        if(nodes[i].cluster == "1") {
+    }
+    else {
+      $.ajax({
+        url : "/getCoAuthor",
+        type : "POST",
+        data : {
+          name : authorName
+        },
+        dataType: "json"
+      }).done(function(data) {
+        var nodes = data.nodes;
+        var edges = [];
+        nodes.push({
+          cluster : "0",
+          id : nodes.length,
+          label : "author",
+          title : authorName,
+          value : 1,
+          group : "author"
+        })
+        var sourceId = nodes.length-1;
+        for(i = 0; i < nodes.length-1; i++) {
           edges.push({
             title : "CO_AUTHOR",
             from : sourceId,
-            to : nodes[i].id
+            to : i
           });
         }
-      }
-      edges.forEach(function(edge){
-        //edge.weight = 1;
-        edge.source = edge.from;
-        edge.target = edge.to;
-      });
-      drawGraphD3(nodes, edges);
-    })
-  });
-
-
-  $('#getCoauthorBtn').click(function() {
-    var authorName = $('#authorName').val();
-    $.ajax({
-      url : "/getCoAuthor",
-      type : "POST",
-      data : {
-        name : authorName
-      },
-      dataType: "json"
-    }).done(function(data) {
-      var textVal = ""+authorName+"'s coauther(s)";
-      $('#textArea').val(JSON.stringify(data));
-      $('#graphTitle').text(textVal);
-      var nodes = data.nodes;
-      var edges = [];
-      nodes.push({
-        cluster : "0",
-        id : nodes.length,
-        label : "author",
-        title : authorName,
-        value : 1,
-        group : "author"
-      })
-      var sourceId = nodes.length-1;
-      for(i = 0; i < nodes.length-1; i++) {
-        edges.push({
-          title : "CO_AUTHOR",
-          from : sourceId,
-          to : i
+        console.log(JSON.stringify(edges));
+          edges.forEach(function(edge){
+          //edge.weight = 1;
+          edge.source = edge.from;
+          edge.target = edge.to;
         });
-      }
-      console.log(JSON.stringify(edges));
-        edges.forEach(function(edge){
-        //edge.weight = 1;
-        edge.source = edge.from;
-        edge.target = edge.to;
-      });
-      drawGraphD3(nodes, edges);
-    })
+        drawGraphD3(nodes, edges);
+      })
+    }
   }); 
   
   $('#timelineBtn').click(function(){
     var startYear = $('#startYear').val();
     var endYear = $('#endYear').val();
-    //var authorList = [];
     var authorList = $('#authorName1').val();
-    //authorList.push($('#authorName1').val());
     if($('#authorName2').val() != "") {
-      //authorList.push($('#authorName2').val());
       authorList = authorList + ", "+$('#authorName2').val();
     }
     if($('#authorName3').val() != "") {
-      //authorList.push($('#authorName3').val());
       authorList = authorList + ", "+$('#authorName3').val();
     }
     $.ajax({
@@ -199,7 +184,6 @@ $(document).ready(function() {
       },
       dataType : "json"
     }).done(function(data) {
-      //console.log(JSON.stringify(data));
       var authors = data.author;
       var nodes = [];
       var edges = [];
@@ -301,31 +285,31 @@ $(document).ready(function() {
       nodes.push(nodeW);
       nodes.push(nodeOT);
       for(i = 0; i < database.length; i++) {
-        if(i > 100) {break;}
+        if(i > 50) {break;}
         nodes.push({title : database[i].title, id : id, cluster : 6});
         edges.push({source : nodeD.id, target : id});
         id = id + 1;
       };
       for(i = 0; i < software.length; i++) {
-        if(i > 100) {break;}
+        if(i > 50) {break;}
         nodes.push({title : software[i].title, id : id, cluster : 6});
         edges.push({source : nodeS.id, target : id});
         id = id + 1;
       };
       for(i = 0; i < OS.length; i++) {
-        if(i > 100) {break;}
+        if(i > 50) {break;}
         nodes.push({title : OS[i].title, id : id, cluster : 6});
         edges.push({source : nodeO.id, target : id});
         id = id + 1;
       };
       for(i = 0; i < web.length; i++) {
-        if(i > 100) {break;}
+        if(i > 50) {break;}
         nodes.push({title : web[i].title, id : id, cluster : 6});
         edges.push({source : nodeW.id, target : id});
         id = id + 1;
       };
       for(i = 0; i < other.length; i++) {
-        if(i > 100) {break;}
+        if(i > 50) {break;}
         nodes.push({title : other[i].title, id : id, cluster : 6});
         edges.push({source : nodeOT.id, target : id});
         id = id + 1;
@@ -349,6 +333,7 @@ $(document).ready(function() {
       dataType : "json"
     }).done(function(data) {
       var evo = data.Evolution;
+      $('#rst').empty();
       $('#rst').append("<tr><th>Year</th><th>Focused Topic</th></tr>");
       var i = 0;
       evo.forEach(function(e) {
@@ -375,6 +360,7 @@ $(document).ready(function() {
       dataType : "json"
     }).done(function(data) {
       var rst = data.Result;
+      $('#rst').empty();
       $('#rst').append("<tr><th>Rank</th><th>Paper</th></tr>");
       var i = 0;
       rst.forEach(function(e){
@@ -401,8 +387,8 @@ $(document).ready(function() {
     var svg = d3.select("#svgDiv")
                 .append("svg")
                 .attr("width", width)
-                .attr("height", height)
-                .call(zoom);
+                .attr("height", height);
+                //.call(zoom);
     var container = svg.append("g");
     function zoomed() {
       container.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
@@ -429,10 +415,7 @@ $(document).ready(function() {
                   .data(force.nodes())
                   .enter()
                   .append("g")
-                  //.append("circle")
                   .attr("class", "node")
-                  //.attr("r", 8)
-                  //.style("fill", function(d){return color(d.cluster);})
                   .on("click", fClick)
                   .call(force.drag);
     node.append("circle")

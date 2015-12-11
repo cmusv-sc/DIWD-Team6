@@ -46,10 +46,7 @@ $(document).ready(function(){
 	                  .data(force.nodes())
 	                  .enter()
 	                  .append("g")
-	                  //.append("circle")
 	                  .attr("class", "node")
-	                  //.attr("r", 8)
-	                  //.style("fill", function(d){return color(d.cluster);})
 	                  .on("click", fClick)
 	                  .call(force.drag);
 	    node.append("circle")

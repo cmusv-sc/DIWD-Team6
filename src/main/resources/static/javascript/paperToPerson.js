@@ -17,22 +17,15 @@ $(document).ready(function(){
       	//{"cluster":"1","id":25,"label":"paper","title":"Evolutionary Customer Evaluation: A Dynamic Approach to a Banking Case.","value":2,"group":"paper"}
       	var nodes = data.nodes;
       	var edges = data.edges;
+      	edges.forEach(function(edge){
+	      edge.source = edge.from-1;
+	      edge.target = edge.to-1;
+	    });
       	drawGraphD3(nodes, edges);
     });
 
     function drawGraphD3(nodes, edges) {
 	    var color = d3.scale.category20();
-	    var arr = [];
-	    nodes.forEach(function(node){
-	    	arr.push(node.id);
-	    })
-	    console.log(arr);
-	    edges.forEach(function(edge){
-	      edge.source = edge.from-1;
-	      edge.target = edge.to-1;
-	    });
-	    console.log(JSON.stringify(edges));
-	    //console.log(JSON.stringify(nodes));	
 	    var force = d3.layout.force()
 	                  .nodes(nodes)
 	                  .links(edges)
@@ -52,10 +45,7 @@ $(document).ready(function(){
 	                  .data(force.nodes())
 	                  .enter()
 	                  .append("g")
-	                  //.append("circle")
 	                  .attr("class", "node")
-	                  //.attr("r", 8)
-	                  //.style("fill", function(d){return color(d.cluster);})
 	                  .on("click", fClick)
 	                  .call(force.drag);
 	    node.append("circle")
