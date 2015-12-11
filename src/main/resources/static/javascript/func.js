@@ -2,12 +2,7 @@ $(document).ready(function() {
   // var nodes = null;
   // var edges = null;
   // var network = null;
-  var height = 800;
-  var width = 1100;
-  var svg = d3.select("#svgDiv")
-              .append("svg")
-              .attr("width", width)
-              .attr("height", height);
+  
 
   $('#journalGraphBtn').click(function(){
     var journalName = $('#journalName').val();
@@ -37,9 +32,25 @@ $(document).ready(function() {
       dataType: "json"
     }).done(function(data) {
       var textVal = "Potential collaborators in "+keyword;
-      $('#textArea').val(data);
+      $('#textArea').val(JSON.stringify(data));
       $('#graphTitle').text(textVal);
-      draw(data);
+      var nodes = data.nodes;
+      nodes.push({
+        cluster : 10,
+        label : "keyword",
+        title : keyword,
+        value : 1,
+        group : "keyword"
+      });
+      var idx = nodes.length-1;
+      var edges = [];
+      for(i = 0; i < idx; i++) {
+        edges.push({
+          source : idx,
+          target : i
+        });
+      }
+      drawGraphD3(nodes, edges);
     })
   });
 
@@ -72,9 +83,25 @@ $(document).ready(function() {
       dataType: "json"
     }).done(function(data) {
       var textVal = "Experts in "+keyword;
-      $('#textArea').val(data);
+      //$('#textArea').val(JSON.stringify(data));
       $('#graphTitle').text(textVal);
-      draw(data);
+      var nodes = data.nodes;
+      nodes.push({
+        cluster : 10,
+        label : "keyword",
+        title : keyword,
+        value : 1,
+        group : "keyword"
+      });
+      var idx = nodes.length-1;
+      var edges = [];
+      for(i = 0; i < idx; i++) {
+        edges.push({
+          source : idx,
+          target : i
+        });
+      }
+      drawGraphD3(nodes, edges);
     })
   });
 
@@ -115,6 +142,11 @@ $(document).ready(function() {
           });
         }
       }
+      edges.forEach(function(edge){
+        //edge.weight = 1;
+        edge.source = edge.from;
+        edge.target = edge.to;
+      });
       drawGraphD3(nodes, edges);
     })
   });
@@ -152,13 +184,14 @@ $(document).ready(function() {
         });
       }
       console.log(JSON.stringify(edges));
+        edges.forEach(function(edge){
+        //edge.weight = 1;
+        edge.source = edge.from;
+        edge.target = edge.to;
+      });
       drawGraphD3(nodes, edges);
     })
   }); 
-
-  $('.node').click(function() {
-    alert("hahahaha");
-  })
 
   function paperToPerson() {
     $.ajax({
@@ -182,13 +215,15 @@ $(document).ready(function() {
   }
 
   function drawGraphD3(nodes, edges) {
-    var color = d3.scale.category20();
-    edges.forEach(function(edge){
-      //edge.weight = 1;
-      edge.source = edge.from;
-      edge.target = edge.to;
-    });
+    $('#svgDiv').empty()
+    var height = 800;
+    var width = 1100;
+    var svg = d3.select("#svgDiv")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
     //console.log(JSON.stringify(edges));
+    var color = d3.scale.category20();
     var force = d3.layout.force()
                   .nodes(nodes)
                   .links(edges)
@@ -307,3 +342,15 @@ $(document).ready(function() {
   //   // });
   // }
 })
+
+// {[
+//   {name : xxx,
+//     pubYear : [{
+//       year : xx,
+//       publication : [{
+//         title : xxx,
+//       }]
+//     }]
+//   }
+// ]}
+
