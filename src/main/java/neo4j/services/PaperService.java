@@ -139,7 +139,8 @@ public class PaperService {
         while (result.hasNext() && max < 11) {
         	Paper row = result.next();
         	if (row.getCite() != null) {
-        		nodes.add(Remap.map("Name", row.getCite(), "rank", max + ""));
+        		String[] cite = row.getCite().split("/");
+        		nodes.add(Remap.map("Name", cite[2], "rank", max + ""));
             	max++;
         	}
         }
