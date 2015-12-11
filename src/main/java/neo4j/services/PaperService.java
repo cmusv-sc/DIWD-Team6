@@ -307,7 +307,7 @@ public class PaperService {
             		}
         		}
         	}
-    	return Remap.map("Database", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
+    	return Remap.map("Databases", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
     }
     	private boolean containsKeyword(String[] keywordList, String name) {
     		for (String each : keywordList) {
