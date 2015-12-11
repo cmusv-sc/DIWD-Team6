@@ -3,24 +3,6 @@ $(document).ready(function() {
   // var edges = null;
   // var network = null;
   
-
-  $('#journalGraphBtn').click(function(){
-    var journalName = $('#journalName').val();
-    $.ajax({
-      url : "/journalGraph",
-      type : "POST",
-      data : {
-        journalName : journalName
-      },
-      dataType: "text"
-    }).done(function(data) {
-      var textVal = "Potential collaborators in "+keyword;
-      $('#textArea').val(data);
-      $('#graphTitle').text(textVal);
-      draw(data);
-    })
-  });
-
   $('#findCollabBtn').click(function() {
     var keyword = $('#keyword').val();    
     $.ajax({
@@ -192,38 +174,242 @@ $(document).ready(function() {
       drawGraphD3(nodes, edges);
     })
   }); 
-
-  function paperToPerson() {
+  
+  $('#timelineBtn').click(function(){
+    var startYear = $('#startYear').val();
+    var endYear = $('#endYear').val();
+    //var authorList = [];
+    var authorList = $('#authorName1').val();
+    //authorList.push($('#authorName1').val());
+    if($('#authorName2').val() != "") {
+      //authorList.push($('#authorName2').val());
+      authorList = authorList + ", "+$('#authorName2').val();
+    }
+    if($('#authorName3').val() != "") {
+      //authorList.push($('#authorName3').val());
+      authorList = authorList + ", "+$('#authorName3').val();
+    }
     $.ajax({
-      url : "/graphPaper2Person",
-      type : "GET",
+      url : "/timelineOfAuthors",
+      type : "POST",
+      data : {
+        startYear : startYear,
+        endYear : endYear,
+        authorList : authorList
+      },
+      dataType : "json"
+    }).done(function(data) {
+      //console.log(JSON.stringify(data));
+      var authors = data.author;
+      var nodes = [];
+      var edges = [];
+      var id = 0;
+      authors.forEach(function(author){
+        var node = {title : author.name, cluster : 1, id : id};
+        id = id + 1;
+        nodes.push(node);
+        var yps = author.year;
+        yps.forEach(function(yp){
+          var nodey = {title : yp.year, cluster : 4, id : id};
+          id = id + 1;
+          nodes.push(nodey);
+          edges.push({source : node.id, target : nodey.id});
+          var publications = yp.publication;
+          publications.forEach(function(p) {
+            var nodep = {title : p.title, cluster : 7, id : id};
+            id = id + 1;
+            nodes.push(nodep);
+            edges.push({source : nodey.id, target : nodep.id});
+          })
+        })
+      });
+      drawGraphD3(nodes, edges);
+    });
+  });
+
+  $('#journalGraphBtn').click(function(){
+    var journalName = $('#journalName').val();
+    $.ajax({
+      url : "/journalGraph",
+      type : "POST",
+      data : {
+        name : journalName
+      },
       dataType : "json"
     }).done(function(data){
-      draw(data);
+      var nodes = [];
+      var edges = [];
+      var id = 0;
+      nodes.push({title : journalName, id : id, cluster : 1});
+      id = id + 1;
+      cons = data.Contributions;
+      cons.forEach(function(d){
+        var title = d.Name + ": " + d.Contribution;
+        nodes.push({title : title, id : id, cluster : 6});        
+        edges.push({source : 0, target : id});
+        id = id + 1;
+      });
+      drawGraphD3(nodes, edges);
     });
-  }
+  });
 
-  function personToPerson() {
-    alert("person to person");
+  $('#categorizeBtn').click(function(){
+    var keyword = $('#keyword').val();
+    var startYear = $('#startYear').val();
+    var endYear = $('#endYear').val();
+    var channel = $('#channel').val();
+    var data = {
+      startYear : startYear,
+      endYear : endYear,
+      channel : channel,
+      keywordList : keyword
+    }
+    if(keyword == "" || channel == "") {
+      data =  {
+        startYear : startYear,
+        endYear : endYear
+      }
+    }
     $.ajax({
-      url : "/graphPerson2Person",
-      type : "GET",
+      url : "/categorize",
+      type : "POST",
+      data : data,
       dataType : "json"
-    }).done(function(data){
-      draw(data);
+    }).done(function(data) {
+      var nodes = [];
+      var edges = [];
+      var database = data.Database;
+      var software = data.Software;
+      var os = "Operating System";
+      var OS = data[os];
+      var web = data.Web;
+      var other = data.Other;
+      var id = 0;
+      var nodeD = {title : "Database", id : id, cluster : 1};
+      id = id + 1;
+      var nodeS = {title : "Software", id : id, cluster : 1};
+      id = id + 1;
+      var nodeO = {title : "Operating System", id : id, cluster : 1};
+      id = id + 1;
+      var nodeW = {title : "Web", id : id, cluster : 1};
+      id = id + 1;
+      var nodeOT = {title : "Other", id : id, cluster : 1};
+      id = id + 1;
+      nodes.push(nodeD);
+      nodes.push(nodeS);
+      nodes.push(nodeO);
+      nodes.push(nodeW);
+      nodes.push(nodeOT);
+      for(i = 0; i < database.length; i++) {
+        if(i > 100) {break;}
+        nodes.push({title : database[i].title, id : id, cluster : 6});
+        edges.push({source : nodeD.id, target : id});
+        id = id + 1;
+      };
+      for(i = 0; i < software.length; i++) {
+        if(i > 100) {break;}
+        nodes.push({title : software[i].title, id : id, cluster : 6});
+        edges.push({source : nodeS.id, target : id});
+        id = id + 1;
+      };
+      for(i = 0; i < OS.length; i++) {
+        if(i > 100) {break;}
+        nodes.push({title : OS[i].title, id : id, cluster : 6});
+        edges.push({source : nodeO.id, target : id});
+        id = id + 1;
+      };
+      for(i = 0; i < web.length; i++) {
+        if(i > 100) {break;}
+        nodes.push({title : web[i].title, id : id, cluster : 6});
+        edges.push({source : nodeW.id, target : id});
+        id = id + 1;
+      };
+      for(i = 0; i < other.length; i++) {
+        if(i > 100) {break;}
+        nodes.push({title : other[i].title, id : id, cluster : 6});
+        edges.push({source : nodeOT.id, target : id});
+        id = id + 1;
+      };
+      drawGraphD3(nodes, edges);
+    })
+  });
+
+  $('#evolutionBtn').click(function() {
+    var startYear = $('#startYear').val();
+    var endYear = $('#endYear').val();
+    var journalName = $('#journalName').val();
+    $.ajax({
+      url : "/getJournalEvolution",
+      type : "POST",
+      data : {
+        startYear : startYear,
+        endYear : endYear,
+        name : journalName
+      },
+      dataType : "json"
+    }).done(function(data) {
+      var evo = data.Evolution;
+      $('#rst').append("<tr><th>Year</th><th>Focused Topic</th></tr>");
+      var i = 0;
+      evo.forEach(function(e) {
+        var row = "<tr><td>"+e.Year+"</td><td>"+e.topic+"</td></tr>";
+        if(i % 2 == 0) {
+          row = '<tr class="success"><td>'+e.Year+'</td><td>'+e.topic+'</td></tr>';
+        }
+        i++;
+        $('#rst').append(row);
+      })
     });
-  }
+  });
+
+  $('#topPaperChannelBtn').click(function() {
+    var year = $('#year').val();
+    var channel = $('#channel').val();
+    $.ajax({
+      url : "/getTopKCitedPaper",
+      type : "POST",
+      data : {
+        year : year,
+        name : channel
+      },
+      dataType : "json"
+    }).done(function(data) {
+      var rst = data.Result;
+      $('#rst').append("<tr><th>Rank</th><th>Paper</th></tr>");
+      var i = 0;
+      rst.forEach(function(e){
+        var row = "<tr><td>"+e.rank+"</td><td>"+e.Name+"</td></tr>";
+        if(i % 2 == 0) {
+          row = '<tr class="info"><td>'+e.rank+'</td><td>'+e.Name+'</td></tr>';
+        }
+        i++;
+        $('#rst').append(row);
+      });
+    });
+  });
 
   function drawGraphD3(nodes, edges) {
     $('#svgDiv').empty()
     var height = 800;
     var width = 1100;
+    var zoom = d3.behavior.zoom()
+                  .translate([0, 0])
+                  .scaleExtent([0.1, 10])
+                  .scale(1)
+                  .on("zoom", zoomed);
+    
     var svg = d3.select("#svgDiv")
                 .append("svg")
                 .attr("width", width)
-                .attr("height", height);
-    //console.log(JSON.stringify(edges));
+                .attr("height", height)
+                .call(zoom);
+    var container = svg.append("g");
+    function zoomed() {
+      container.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+    }
+    
     var color = d3.scale.category20();
+
     var force = d3.layout.force()
                   .nodes(nodes)
                   .links(edges)
@@ -233,13 +419,13 @@ $(document).ready(function() {
                   .on("tick", tick)
                   .start();
     
-    var link = svg.selectAll(".link")
+    var link = container.selectAll(".link")
                   .data(force.links())
                   .enter()
                   .append("line")
                   .attr("class", "link");
 
-    var node = svg.selectAll(".node")
+    var node = container.selectAll(".node")
                   .data(force.nodes())
                   .enter()
                   .append("g")
@@ -275,82 +461,6 @@ $(document).ready(function() {
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     }
   }
-
-  // function draw(data) {
-  //   //var test = null;
-  //   //var data = JSON.parse(data);
-  //   //var container = $('#networkGraph');
-  //   var container = document.getElementById('networkGraph');
-  //   var options = {
-  //     stabilize:false,
-  //     edges: {
-  //       color: {
-  //         color: "gray",
-  //         highlight: "gray",
-  //       },
-  //     },
-  //     nodes: {
-  //       shape: 'dot',
-  //       radiusMin: 10,
-  //       radiusMax: 30,
-  //     },
-  //     groups: {
-  //       user: {
-  //         color:"#F2545A",
-  //         shape:"star",
-  //       },
-  //       feature: {
-  //         shape:"triangle",
-  //         color:"#EC8F93",
-  //       },
-  //       service: {
-  //         color:"#EF777C",
-  //         shape:"dot",
-  //       }
-  //     },
-  //     tooltip: {
-  //       delay: 300,
-  //       fontColor: "black",
-  //       fontSize: 14, // px
-  //       fontFace: "verdana",
-  //       color: {
-  //         border: "#666",
-  //         background: "#FFFFC6"
-  //       }
-  //     }
-  //   };
-
-  //   var network = new vis.Network(container, data, options);
-  //   //network.focusOnNode(19);
-  //   // network.on('select', function(properties) {
-  //   //   var select_node = $.grep(data.nodes, function(e){
-  //   //     return e["id"] == properties.nodes[0];
-  //   //   })[0];
-  //   //   if(select_node["group"] == "service"){
-  //   //     var select_edges = $.grep(data.edges, function(e) { 
-  //   //       return e["from"] == select_node["id"] });
-  //   //     var textVal = "";
-  //   //     textVal += "<h3>"+select_node["label"]+"</h3>";
-  //   //     textVal += "<div><h4>Keywords:</h4><h4>"
-  //   //     for (var i = select_edges.length - 1; i >= 0; i--) {
-  //   //       textVal += "<span class=\"label label-primary\">"+select_edges[i]["to"]+"</span>\n";
-  //   //     };
-  //   //     textVal += "</h4></div>";
-  //   //     textVal += "<div><img src=\""+select_node["image"]+"\" class=\"img-responsive\"></div>";
-  //   //     $("#testText").html(textVal);
-  //   //   }
-  //   // });
-  // }
 })
 
-// {[
-//   {name : xxx,
-//     pubYear : [{
-//       year : xx,
-//       publication : [{
-//         title : xxx,
-//       }]
-//     }]
-//   }
-// ]}
 

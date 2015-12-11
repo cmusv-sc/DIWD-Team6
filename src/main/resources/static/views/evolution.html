@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+	<title>DBLP Network | Q1</title>
+	<style type="text/css">
+		body {
+	    	padding-top: 60px;
+	      	padding-bottom: 40px;
+    	}
+
+    	.link {
+			fill: none;
+			stroke: #666;
+			stroke-width: 1.5px;
+		}
+
+		.node circle {
+			fill: #ccc;
+			stroke: #fff;
+			stroke-width: 1.5px;
+		}
+
+		text {
+			font: 10px sans-serif;
+			pointer-events: none;
+		}
+	</style>
+	<link href="../css/metro-bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="../css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="../css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+	
+	<link href="../css/vis.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../javascript/vis.js"></script>
+	<script type="text/javascript" src="../javascript/jquery-2.1.4.js"></script>
+	<script src="../javascript/googleAnalytics.js"></script>
+	<script type="text/javascript" src="../javascript/bootstrap.js"></script>
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../javascript/func.js"></script>
+</head>
+<body>
+	<div class="container">
+		<!-- navbar -->
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="navbar-brand" href="../index.html">Team 6's Secret Portal</a>
+					<ul class="nav pull-right">
+						<li class="navbar-brand">Welcome!</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- content -->
+		<div class="container">
+			<div class="row">
+				<div>
+					<h2 align="center">Evolution of Focused Topics</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group">
+					<label>Start year</label>
+					<input type="text" class="form-control" id="startYear">
+				</div>
+				<div class="form-group">
+					<label>End Year</label>
+					<input type="text" class="form-control" id="endYear">
+				</div>
+				<div class="form-group">
+					<label>Journal</label>
+					<input type="text" class="form-control" id="journalName">
+				</div>
+				<div align="center">
+					<button class="btn btn-primary" id="evolutionBtn">Submit</button>
+				</div>
+			</div>
+			<div class="row">
+				<div>
+					<h4 id="graphTitle" align="center"></h4>	
+				</div>
+				<div class="col-lg-6">
+					<table class="table" id="rst"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
