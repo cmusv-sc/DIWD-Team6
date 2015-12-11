@@ -265,7 +265,7 @@ public class PaperService {
     			break;
     		}
     	}
-    	return Remap.map("Database", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
+    	return Remap.map("Databases", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
     }
     	
     	private Map<String, Object> toCategorizeFormatByKeywords(Iterator<Paper> result, String[] keywordList) {
