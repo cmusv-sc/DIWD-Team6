@@ -69,7 +69,7 @@ public class AuthorService {
 	}
 	
 	public Map<String, Object> getTimelineOfAuthors(int startYear, int endYear, String[] author) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> result = new  ArrayList<Map<String, Object>>();
 		for (String each : author) {
 			List<Map<String,Object>> nodes = new ArrayList<Map<String, Object>>();
 			for (int start = startYear; start <= endYear; start++) {
@@ -81,7 +81,7 @@ public class AuthorService {
 		        	nodes.add(tempPaper);
 		        }
 			}
-			result.put(each, nodes);
+			result.add(Remap.map("name", each, "publication", nodes));
 	    }
 		return Remap.map("author", result);
 	} 
