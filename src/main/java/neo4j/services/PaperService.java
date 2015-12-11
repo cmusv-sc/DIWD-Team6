@@ -96,23 +96,33 @@ public class PaperService {
         	String [] cite = row.getCite().split("/");
         	nodes.add(Remap.map("id", i, "title",row.getTitle(),"label", "paper", "cite", cite[2], "value", 2, "group", "Basedpaper"));
         	target = i++;
-        	Iterator<Paper> tempResult = paperRepository.findByTitleContaining(cite[2]).iterator();
-        	while (tempResult.hasNext()) {
-				Paper pa = tempResult.next();
-				if (!pa.getTitle().equals(row.getTitle())) {
-					Map<String, Object> paper = Remap.map("title", 
-							pa.getTitle(),"label", "paper", "cluster", "2", "value", 1, "group", "CoPaper");
-	                int source = 0;
-	                if (source == 0) {
-	                	paper.put("id", i);
-	                    source = i;
-	                    i++;
-	                    nodes.add(paper);
-	                }
-
-	                rels.add(Remap.map("from", source, "to", target, "title", "CO_AUTHOR"));
-				}
-			}
+        	Map<String, Object> paper = Remap.map("title", 
+					cite[2],"label", "paper", "cluster", "2", "value", 1, "group", "CoPaper");
+        	int source = 0;
+            if (source == 0) {
+            	paper.put("id", i);
+                source = i;
+                i++;
+                nodes.add(paper);
+            }
+            rels.add(Remap.map("from", source, "to", target, "title", "CoPaper"));
+//        	Iterator<Paper> tempResult = paperRepository.findByTitleContaining(cite[2]).iterator();
+//        	while (tempResult.hasNext()) {
+//				Paper pa = tempResult.next();
+//				if (!pa.getTitle().equals(row.getTitle())) {
+//					Map<String, Object> paper = Remap.map("title", 
+//							pa.getTitle(),"label", "paper", "cluster", "2", "value", 1, "group", "CoPaper");
+//	                int source = 0;
+//	                if (source == 0) {
+//	                	paper.put("id", i);
+//	                    source = i;
+//	                    i++;
+//	                    nodes.add(paper);
+//	                }
+//
+//	                rels.add(Remap.map("from", source, "to", target, "title", "CoPaper"));
+//				}
+//			}
         }
         return Remap.map("nodes", nodes, "edges", rels);
     }
@@ -255,7 +265,7 @@ public class PaperService {
     			break;
     		}
     	}
-    	return Remap.map("Database", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
+    	return Remap.map("Databases", DBNodes, "Web", WebNodes, "Software", SoftwareNodes, "Operating System", OSNodes, "Other", OtherNodes);
     }
     	
     	private Map<String, Object> toCategorizeFormatByKeywords(Iterator<Paper> result, String[] keywordList) {
