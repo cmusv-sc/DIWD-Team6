@@ -262,7 +262,7 @@ $(document).ready(function() {
     }).done(function(data) {
       var nodes = [];
       var edges = [];
-      var database = data.Database;
+      var database = data.Databases;
       var software = data.Software;
       var os = "Operating System";
       var OS = data[os];

@@ -1,7 +1,8 @@
 $(document).ready(function(){
+	$('#card').hide();
 	var height = 800;
 	var width = 1100;
-	var svg = d3.select("body")
+	var svg = d3.select("#svgDiv")
 		        .append("svg")
 		        .attr("width", width)
 		        .attr("height", height);
@@ -74,8 +75,24 @@ $(document).ready(function(){
 	    		dataType : "json"
 	    	}).done(function(data) {
 	    		console.log(JSON.stringify(data));
+	    		$('#rst').empty();
+	    		var row1 = "<tr><th>Author Name</th><td>"+author+"</td></tr>"
+      			$('#rst').append(row1);
+      			var papers = data.nodes;
+      			for(i = 0; i < papers.length; i++) {
+      				var row = "<tr><th></th><td>"+papers[i].title+"</td></tr>";
+      				if(i == 0) {
+      					row = "<tr><th>Papers</th><td>"+papers[i].title+"</td></tr>";
+      				}
+      				$('#rst').append(row);
+      			}
+	    		$('#card').show();
 	    	});
 	    }
+
+	    $('#closeBtn').click(function(){
+	    	$('#card').hide();
+	    }) 
 	    function tick() {
 	      link
 	        .attr("x1", function(d) { return d.source.x; })

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	var height = 800;
 	var width = 1100;
-	var svg = d3.select("body")
+	var svg = d3.select("#svgDiv")
 		        .append("svg")
 		        .attr("width", width)
 		        .attr("height", height);
@@ -62,8 +62,40 @@ $(document).ready(function(){
 
 	    function fClick() {
 	      var t = d3.select(this).select("text").text();
+	      t = t.substring(0, t.length-1);
 	      console.log(t);
+	      getPaperInfo(t);
 	    }
+
+	    function getPaperInfo(paper) {
+	    	$.ajax({
+	    		url : "/getPaperInfo",
+	    		type : "POST",
+	    		data : {name : paper},
+	    		dataType : "json"
+	    	}).done(function(data){
+	    		console.log(JSON.stringify(data));
+	    		$('#rst').empty();
+	    		var info = data.Information[0];
+	    		var row = "<tr><th>Title</th><td>"+info.title+"</td></tr>";
+	    		$('#rst').append(row);
+	    		var row = "<tr><th>Channel</th><td>"+info.channel+"</td></tr>";
+	    		$('#rst').append(row);
+	    		// var row = "<tr><th>Cite</th><td>"+info.cite+"</td></tr>";
+	    		// $('#rst').append(row);
+	    		var row = "<tr><th>Category</th><td>"+info.category+"</td></tr>";
+	    		$('#rst').append(row);
+	    		var row = "<tr><th>Book Title</th><td>"+info.booktitle+"</td></tr>";
+	    		$('#rst').append(row);
+	    		var row = "<tr><th>Year</th><td>"+info.year+"</td></tr>";
+	    		$('#rst').append(row);
+	    		$('#card').show();
+	    	});	
+	    }
+
+	    $('#closeBtn').click(function(){
+	    	$('#card').hide();
+	    }) 
 	    function tick() {
 	      link
 	        .attr("x1", function(d) { return d.source.x; })

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	var height = 800;
 	var width = 1100;
-	var svg = d3.select("body")
+	var svg = d3.select("#svgDiv")
 		        .append("svg")
 		        .attr("width", width)
 		        .attr("height", height);
@@ -62,7 +62,19 @@ $(document).ready(function(){
 	    function fClick() {
 	      var t = d3.select(this).select("text").text();
 	      console.log(t);
+	      //getPaperInfo(t);
 	    }
+
+	    // function getPaperInfo(paper) {
+	    // 	$.ajax({
+	    // 		url : "/getPaperInfo",
+	    // 		type : "POST",
+	    // 		data : {name : paper},
+	    // 		dataType : "json"
+	    // 	}).done(function(data){
+	    // 		console.log(JSON.stringify(data));
+	    // 	});
+	    // }
 	    function tick() {
 	      link
 	        .attr("x1", function(d) { return d.source.x; })
