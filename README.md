@@ -1,6 +1,6 @@
 # KG-DBLP
 
-This project is about Analysis DBLP using Neo4j Graph database.
+This project is about Analyzing DBLP using Neo4j Graph database.
 
 Java version: 1.8 (You cannot use 1.7 or below)
 
